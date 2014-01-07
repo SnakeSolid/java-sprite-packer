@@ -631,8 +631,8 @@ public class CoreFactory {
 	}
 
 	public void removeSprite(Animation animation, Sprite sprite) {
-		List<Sprite> sprites = animation.getSprites();
-		List<Sprite> list = new LinkedList<Sprite>(sprites);
+		List<Sprite> animationSprites = animation.getSprites();
+		List<Sprite> list = new LinkedList<Sprite>(animationSprites);
 
 		if (activeSprite == sprite) {
 			activeSprite = null;
@@ -641,6 +641,7 @@ public class CoreFactory {
 		list.remove(sprite);
 
 		animation.setSprites(list);
+		sprites.setList(list);
 
 		notifySubscribers();
 	}
