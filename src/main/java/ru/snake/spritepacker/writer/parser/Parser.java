@@ -27,12 +27,17 @@ public class Parser {
 	}
 
 	public Expression parse() {
-		nextToken();
+		current = tokens.poll();
+		next = tokens.peek();
 
 		return parseTextExpression();
 	}
 
 	private void nextToken() {
+		if (current.type == TokeType.EPSILON) {
+			throw ParserException.create("parseTextExpression", current);
+		}
+
 		current = tokens.poll();
 		next = tokens.peek();
 	}
@@ -66,7 +71,7 @@ public class Parser {
 
 		if (current.type == TokeType.END_EXPRESSION) {
 			node = new ConstantExpression("");
-		} else if (next.type == TokeType.END_EXPRESSION) {
+		} else if (next != null && next.type == TokeType.END_EXPRESSION) {
 			node = parseExpressionValue();
 		} else {
 			node = parseExpressionNode();

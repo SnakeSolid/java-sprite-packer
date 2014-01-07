@@ -21,6 +21,8 @@ public class AtlasTextWriter extends TextWriter implements CoreFactoryWalker {
 
 	private int animationIndex;
 
+	private boolean ignoreAnimation;
+
 	public AtlasTextWriter(PackerOutput output, File destination, int atlasId) {
 		this.output = output;
 		this.destination = destination;
@@ -38,6 +40,10 @@ public class AtlasTextWriter extends TextWriter implements CoreFactoryWalker {
 
 	public void setPostfix(String postfix) {
 		this.postfix = postfix;
+	}
+
+	public void setIgnoreAnimation(boolean ignoreAnimation) {
+		this.ignoreAnimation = ignoreAnimation;
 	}
 
 	@Override
@@ -101,7 +107,7 @@ public class AtlasTextWriter extends TextWriter implements CoreFactoryWalker {
 				continue;
 			}
 
-			if (data.animation != animationIndex) {
+			if (!ignoreAnimation && data.animation != animationIndex) {
 				continue;
 			}
 

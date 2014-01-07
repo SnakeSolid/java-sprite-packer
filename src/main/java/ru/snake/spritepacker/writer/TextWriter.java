@@ -24,7 +24,10 @@ public abstract class TextWriter implements CoreFactoryWalker {
 	private boolean initialized;
 
 	private VariableMap variableMap;
-	private Expression expression;
+
+	private Expression headerExpression;
+	private Expression lineExpression;
+	private Expression footerExpression;
 
 	public TextWriter() {
 		fileWriter = null;
@@ -33,17 +36,37 @@ public abstract class TextWriter implements CoreFactoryWalker {
 		initialized = false;
 
 		variableMap = new VariableMap();
-		expression = null;
+
+		headerExpression = null;
+		lineExpression = null;
+		footerExpression = null;
 	}
 
-	public void prepareExpression(String textExpression) {
+	public void prepareHeader(String textExpression) {
 		Lexer lexer = new Lexer(textExpression);
 		List<Token> tokens = lexer.getTokens();
 		Parser parser = new Parser(tokens);
-		expression = parser.parse();
+		headerExpression = parser.parse();
 
-		variableMap.clear();
-		expression.visit(variableMap);
+		headerExpression.visit(variableMap);
+	}
+
+	public void prepareLine(String textExpression) {
+		Lexer lexer = new Lexer(textExpression);
+		List<Token> tokens = lexer.getTokens();
+		Parser parser = new Parser(tokens);
+		lineExpression = parser.parse();
+
+		lineExpression.visit(variableMap);
+	}
+
+	public void prepareFooter(String textExpression) {
+		Lexer lexer = new Lexer(textExpression);
+		List<Token> tokens = lexer.getTokens();
+		Parser parser = new Parser(tokens);
+		footerExpression = parser.parse();
+
+		footerExpression.visit(variableMap);
 	}
 
 	protected void setValue(String variableName, int value) {
@@ -55,8 +78,12 @@ public abstract class TextWriter implements CoreFactoryWalker {
 	}
 
 	protected void writeLine() {
-		Value value = expression.getValue();
+		if (lineExpression != null) {
+			writeValue(lineExpression.getValue());
+		}
+	}
 
+	private void writeValue(Value value) {
 		try {
 			bufferedWriter.write(value.getString());
 			bufferedWriter.write('\n');
@@ -84,11 +111,19 @@ public abstract class TextWriter implements CoreFactoryWalker {
 		bufferedWriter = new BufferedWriter(fileWriter);
 
 		initialized = true;
+
+		if (headerExpression != null) {
+			writeValue(headerExpression.getValue());
+		}
 	}
 
 	protected void endWrite() {
 		if (!initialized) {
 			return;
+		}
+
+		if (footerExpression != null) {
+			writeValue(footerExpression.getValue());
 		}
 
 		try {
