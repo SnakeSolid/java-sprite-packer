@@ -9,6 +9,9 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class ImageView extends JPanel {
 
+	private static final int MAX_WIDTH = 1024;
+	private static final int MAX_HEIGHT = 768;
+
 	private final Image image;
 
 	public ImageView(Image image) {
@@ -17,17 +20,18 @@ public class ImageView extends JPanel {
 		int width = image.getWidth(null);
 		int height = image.getHeight(null);
 
-		if (width > 1024) {
-			width = 1024;
+		if (width > MAX_WIDTH) {
+			width = MAX_WIDTH;
 		}
 
-		if (height > 768) {
-			height = 768;
+		if (height > MAX_HEIGHT) {
+			height = MAX_HEIGHT;
 		}
 
 		Dimension dimension = new Dimension(width, height);
 
 		setPreferredSize(dimension);
+		setMaximumSize(dimension);
 	}
 
 	@Override

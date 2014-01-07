@@ -29,8 +29,23 @@ public class TextureAtlas extends JPanel {
 
 		g.dispose();
 
+		int prefWidth = width;
+		int prefHeight = height;
+
+		if (prefWidth < MIN_SIZE) {
+			prefWidth = MIN_SIZE;
+		} else if (prefWidth > MAX_WIDTH) {
+			prefWidth = MAX_WIDTH;
+		}
+
+		if (prefHeight < MIN_SIZE) {
+			prefHeight = MIN_SIZE;
+		} else if (prefHeight > MAX_HEIGHT) {
+			prefHeight = MAX_HEIGHT;
+		}
+
 		setMinimumSize(new Dimension(MIN_SIZE, MIN_SIZE));
-		setPreferredSize(new Dimension(width, height));
+		setPreferredSize(new Dimension(prefWidth, prefHeight));
 		setMaximumSize(new Dimension(MAX_WIDTH, MAX_HEIGHT));
 	}
 
