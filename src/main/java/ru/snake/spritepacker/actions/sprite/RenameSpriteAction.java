@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.Action;
 
-import ru.snake.spritepacker.R;
+import ru.snake.spritepacker.Messages;
 import ru.snake.spritepacker.actions.BasicAction;
 import ru.snake.spritepacker.core.CoreFactory;
 import ru.snake.spritepacker.core.Sprite;
@@ -15,6 +15,8 @@ import ru.snake.spritepacker.util.Dialogs;
 @SuppressWarnings("serial")
 public class RenameSpriteAction extends BasicAction implements Action {
 
+	private static final String ICON_NAME = "rename"; //$NON-NLS-1$
+
 	private final Component parent;
 	private final CoreFactory factory;
 
@@ -22,10 +24,10 @@ public class RenameSpriteAction extends BasicAction implements Action {
 		this.parent = parent;
 		this.factory = factory;
 
-		putValue(NAME, "Rename sprite");
+		putValue(NAME, Messages.getString("RenameSpriteAction.NAME")); //$NON-NLS-1$
 		putValue(MNEMONIC_KEY, KeyEvent.VK_R);
 
-		setIcon("rename", true);
+		setIcon(ICON_NAME, true);
 	}
 
 	@Override
@@ -33,12 +35,14 @@ public class RenameSpriteAction extends BasicAction implements Action {
 		Sprite sprite = factory.getActiveSprite();
 
 		if (sprite == null) {
-			Dialogs.warning(parent, R.SELECT_SPRITE_BEFORE);
+			Dialogs.warning(parent,
+					Messages.getString("RenameSpriteAction.NO_SPRITE")); //$NON-NLS-1$
 
 			return;
 		}
 
-		String newnane = Dialogs.inputString(parent, R.CHOOSE_SPRITE_NAME,
+		String newnane = Dialogs.inputString(parent,
+				Messages.getString("RenameSpriteAction.MESSAGE"), //$NON-NLS-1$
 				sprite.name);
 
 		if (newnane != null && !newnane.isEmpty()) {

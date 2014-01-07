@@ -41,6 +41,9 @@ import ru.snake.spritepacker.model.CoreListModel;
 
 public class CoreFactory {
 
+	private static final int START_ANIMATION_INDEX = 1;
+	private static final int START_SPRITE_INDEX = 1;
+
 	private static final String ZIP_ENTRY_NAME = "project.json";
 	private static final String ZIP_IMAGE_FORMAT = "%d.png";
 
@@ -247,6 +250,7 @@ public class CoreFactory {
 
 		if (atlasPerAnim) {
 			List<Animation> allAnimations = animations.getList();
+			int animationIndex = START_ANIMATION_INDEX;
 
 			for (Animation eachAnimation : allAnimations) {
 				Set<Texture> allTextures = new HashSet<Texture>();
@@ -258,7 +262,7 @@ public class CoreFactory {
 				ImagePacker packer = new ImagePacker(margin, padding);
 
 				for (Texture eachTexture : allTextures) {
-					ImageData data = new ImageData(eachTexture);
+					ImageData data = new ImageData(animationIndex, eachTexture);
 
 					packer.addItem(data);
 				}
@@ -267,6 +271,8 @@ public class CoreFactory {
 
 				packer.setOutput(output);
 				packer.process(maxWidth, maxHeight, true);
+
+				animationIndex++;
 			}
 		} else {
 			Set<Texture> allTextures = new HashSet<Texture>();
@@ -755,16 +761,25 @@ public class CoreFactory {
 	public void traverse(CoreFactoryWalker walker) {
 		walker.start();
 
+		int animationIndex = START_ANIMATION_INDEX;
+
 		for (Animation eachAnim : animations.getList()) {
-			walker.startAnimation(eachAnim.name);
+			walker.startAnimation(animationIndex, eachAnim.name);
+
+			int spriteIndex = START_SPRITE_INDEX;
 
 			for (Sprite eachSprite : eachAnim.getSprites()) {
-				walker.startSprite(eachSprite.name, eachSprite.offsetX,
-						eachSprite.offsetY, eachSprite.texture);
+				walker.startSprite(spriteIndex, eachSprite.name,
+						eachSprite.offsetX, eachSprite.offsetY,
+						eachSprite.texture);
 				walker.endSprite();
+
+				spriteIndex++;
 			}
 
 			walker.endAnimation();
+
+			animationIndex++;
 		}
 
 		walker.end();

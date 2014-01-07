@@ -7,7 +7,7 @@ import java.io.File;
 
 import javax.swing.Action;
 
-import ru.snake.spritepacker.R;
+import ru.snake.spritepacker.Messages;
 import ru.snake.spritepacker.actions.BasicAction;
 import ru.snake.spritepacker.core.Animation;
 import ru.snake.spritepacker.core.CoreFactory;
@@ -24,7 +24,7 @@ public class ExportAnimationAction extends BasicAction implements Action {
 		this.parent = parent;
 		this.factory = factory;
 
-		putValue(NAME, "Export animation...");
+		putValue(NAME, Messages.getString("ExportAnimationAction.NAME")); //$NON-NLS-1$
 		putValue(MNEMONIC_KEY, KeyEvent.VK_A);
 	}
 
@@ -33,7 +33,8 @@ public class ExportAnimationAction extends BasicAction implements Action {
 		Animation animation = factory.getActiveAnimation();
 
 		if (animation == null) {
-			Dialogs.warning(parent, R.SELECT_ANIMATION_BEFORE);
+			Dialogs.warning(parent,
+					Messages.getString("ExportAnimationAction.MESSAGE")); //$NON-NLS-1$
 
 			return;
 		}

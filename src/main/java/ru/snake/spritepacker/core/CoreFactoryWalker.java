@@ -6,11 +6,11 @@ public interface CoreFactoryWalker {
 
 	public void end();
 
-	public void startAnimation(String name);
+	public void startAnimation(int index, String name);
 
 	public void endAnimation();
 
-	public void startSprite(String name, int offsetX, int offsetY,
+	public void startSprite(int index, String name, int offsetX, int offsetY,
 			Texture texture);
 
 	public void endSprite();

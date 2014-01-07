@@ -3,7 +3,7 @@ package ru.snake.spritepacker.render;
 import javax.swing.Icon;
 import javax.swing.ListCellRenderer;
 
-import ru.snake.spritepacker.R;
+import ru.snake.spritepacker.Messages;
 import ru.snake.spritepacker.core.Sprite;
 import ru.snake.spritepacker.core.Texture;
 
@@ -29,7 +29,8 @@ public class SpriteCellRenderer extends AbstractIconCellRender implements
 	protected void updateText(Object value) {
 		Sprite sprite = (Sprite) value;
 
-		label.setText(String.format(R.SPRITE_RENDER_TEXT, sprite.name,
+		label.setText(String.format(
+				Messages.getString("SpriteCellRenderer.NAME_FORMAT"), sprite.name, //$NON-NLS-1$
 				sprite.offsetX, sprite.offsetY));
 	}
 

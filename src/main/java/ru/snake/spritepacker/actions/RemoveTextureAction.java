@@ -6,13 +6,15 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.Action;
 
-import ru.snake.spritepacker.R;
+import ru.snake.spritepacker.Messages;
 import ru.snake.spritepacker.core.CoreFactory;
 import ru.snake.spritepacker.core.Texture;
 import ru.snake.spritepacker.util.Dialogs;
 
 @SuppressWarnings("serial")
 public class RemoveTextureAction extends BasicAction implements Action {
+
+	private static final String ICON_NAME = "remove";
 
 	private final Component parent;
 	private final CoreFactory factory;
@@ -21,10 +23,10 @@ public class RemoveTextureAction extends BasicAction implements Action {
 		this.parent = parent;
 		this.factory = factory;
 
-		putValue(NAME, "Remove texture");
+		putValue(NAME, Messages.getString("RemoveTextureAction.NAME")); //$NON-NLS-1$
 		putValue(MNEMONIC_KEY, KeyEvent.VK_E);
 
-		setIcon("remove", false);
+		setIcon(ICON_NAME, false);
 	}
 
 	@Override
@@ -32,12 +34,14 @@ public class RemoveTextureAction extends BasicAction implements Action {
 		Texture texture = factory.getActiveTexture();
 
 		if (texture == null) {
-			Dialogs.warning(parent, R.SELECT_TEXTURE_BEFORE_DELETE);
+			Dialogs.warning(parent,
+					Messages.getString("RemoveTextureAction.NO_TEXTURE")); //$NON-NLS-1$
 
 			return;
 		}
 
-		if (Dialogs.confirm(parent, R.SURE_DELETE_TEXTURE)) {
+		if (Dialogs.confirm(parent,
+				Messages.getString("RemoveTextureAction.MESSAGE"))) { //$NON-NLS-1$
 			factory.removeTexture(texture);
 		}
 	}

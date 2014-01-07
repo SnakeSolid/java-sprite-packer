@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.Action;
 
-import ru.snake.spritepacker.R;
+import ru.snake.spritepacker.Messages;
 import ru.snake.spritepacker.actions.BasicAction;
 import ru.snake.spritepacker.core.Animation;
 import ru.snake.spritepacker.core.CoreFactory;
@@ -16,6 +16,8 @@ import ru.snake.spritepacker.util.Dialogs;
 @SuppressWarnings("serial")
 public class RemoveSpriteAction extends BasicAction implements Action {
 
+	private static final String ICON_NAME = "remove"; //$NON-NLS-1$
+
 	private final Component parent;
 	private final CoreFactory factory;
 
@@ -23,10 +25,10 @@ public class RemoveSpriteAction extends BasicAction implements Action {
 		this.parent = parent;
 		this.factory = factory;
 
-		putValue(NAME, "Remove sprite");
+		putValue(NAME, Messages.getString("RemoveSpriteAction.NAME")); //$NON-NLS-1$
 		putValue(MNEMONIC_KEY, KeyEvent.VK_E);
 
-		setIcon("remove", true);
+		setIcon(ICON_NAME, true);
 	}
 
 	@Override
@@ -35,15 +37,17 @@ public class RemoveSpriteAction extends BasicAction implements Action {
 		Sprite sprite = factory.getActiveSprite();
 
 		if (animation == null || sprite == null) {
-			Dialogs.warning(parent, R.SELECT_SPRITE_BEFORE);
+			Dialogs.warning(parent,
+					Messages.getString("RemoveSpriteAction.NO_SPRITE")); //$NON-NLS-1$
 
 			return;
 		}
 
 		String message;
 
-		message = String.format(R.SURE_DELETE_SPRITE, sprite.name,
-				animation.name);
+		message = String.format(
+				Messages.getString("RemoveSpriteAction.MESSAGE"), //$NON-NLS-1$
+				sprite.name, animation.name);
 
 		if (Dialogs.confirm(parent, message)) {
 			factory.removeSprite(animation, sprite);

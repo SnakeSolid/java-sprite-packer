@@ -11,7 +11,7 @@ import java.util.Random;
 
 import javax.swing.Action;
 
-import ru.snake.spritepacker.R;
+import ru.snake.spritepacker.Messages;
 import ru.snake.spritepacker.actions.BasicAction;
 import ru.snake.spritepacker.core.CoreFactory;
 import ru.snake.spritepacker.core.Sprite;
@@ -22,6 +22,9 @@ import ru.snake.spritepacker.util.Util;
 @SuppressWarnings("serial")
 public class ImportAnimationAction extends BasicAction implements Action {
 
+	private static final String ICON_NAME = "import"; //$NON-NLS-1$
+	private static final String NAME_FORMAT = "animation-%d"; //$NON-NLS-1$
+
 	private final Component parent;
 	private final CoreFactory factory;
 
@@ -29,10 +32,10 @@ public class ImportAnimationAction extends BasicAction implements Action {
 		this.parent = parent;
 		this.factory = factory;
 
-		putValue(NAME, "Import animation...");
+		putValue(NAME, Messages.getString("ImportAnimationAction.NAME")); //$NON-NLS-1$
 		putValue(MNEMONIC_KEY, KeyEvent.VK_A);
 
-		setIcon("import", false);
+		setIcon(ICON_NAME, false);
 	}
 
 	@Override
@@ -43,7 +46,8 @@ public class ImportAnimationAction extends BasicAction implements Action {
 			return;
 		}
 
-		if (Dialogs.confirm(parent, R.CROP_IMAGES_WHILE_IMPORT)) {
+		if (Dialogs.confirm(parent,
+				Messages.getString("ImportAnimationAction.MESSAGE"))) { //$NON-NLS-1$
 			importCropped(images);
 		} else {
 			importAsIs(images);
@@ -142,7 +146,7 @@ public class ImportAnimationAction extends BasicAction implements Action {
 
 		Random random = new Random();
 
-		return String.format(R.DEFAULT_ANIMATION_NAME_FORMAT, random.nextInt());
+		return String.format(NAME_FORMAT, random.nextInt());
 	}
 
 }

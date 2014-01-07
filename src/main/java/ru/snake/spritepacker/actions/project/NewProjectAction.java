@@ -9,13 +9,15 @@ import java.io.IOException;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
 
-import ru.snake.spritepacker.R;
+import ru.snake.spritepacker.Messages;
 import ru.snake.spritepacker.actions.BasicAction;
 import ru.snake.spritepacker.core.CoreFactory;
 import ru.snake.spritepacker.util.Dialogs;
 
 @SuppressWarnings("serial")
 public class NewProjectAction extends BasicAction implements Action {
+
+	private static final String ICON_NAME = "new";
 
 	private final Component parent;
 	private final CoreFactory factory;
@@ -24,16 +26,17 @@ public class NewProjectAction extends BasicAction implements Action {
 		this.parent = parent;
 		this.factory = factory;
 
-		putValue(NAME, "New project");
+		putValue(NAME, Messages.getString("NewProjectAction.NAME")); //$NON-NLS-1$
 		putValue(MNEMONIC_KEY, KeyEvent.VK_N);
 
-		setIcon("new", false);
+		setIcon(ICON_NAME, false);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if (factory.isModified()) {
-			int result = Dialogs.yesnocancel(parent, R.SAVE_CURRENT_PROJECT);
+			int result = Dialogs.yesnocancel(parent,
+					Messages.getString("NewProjectAction.MESSAGE")); //$NON-NLS-1$
 
 			if (result == JOptionPane.CANCEL_OPTION) {
 				return;

@@ -16,13 +16,15 @@ import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
-import ru.snake.spritepacker.R;
+import ru.snake.spritepacker.Messages;
 import ru.snake.spritepacker.actions.BasicAction;
 import ru.snake.spritepacker.core.CoreFactory;
 import ru.snake.spritepacker.util.Util;
 
 @SuppressWarnings("serial")
 public class ProjectSettingsAction extends BasicAction implements Action {
+
+	private static final String ICON_NAME = "settings";
 
 	private static final int MAX_SIZE_VALUE = 2048;
 	private static final int MAX_PADDING_VALUE = 256;
@@ -34,19 +36,22 @@ public class ProjectSettingsAction extends BasicAction implements Action {
 		this.parent = parent;
 		this.factory = factory;
 
-		putValue(NAME, "Settings...");
+		putValue(NAME, Messages.getString("ProjectSettingsAction.NAME")); //$NON-NLS-1$
 		putValue(MNEMONIC_KEY, KeyEvent.VK_T);
 
-		setIcon("settings", false);
+		setIcon(ICON_NAME, false);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		int minTextureSize = Util.nearestPowerOf2(2 * factory.getMargin() + 1);
 
-		JLabel marginlabel = new JLabel(R.SETTINGS_MARGIN);
-		JLabel paddinglabel = new JLabel(R.SETTINGS_PADDING);
-		JLabel sizelabel = new JLabel(R.SETTINGS_ATLAS_SIZE);
+		JLabel marginlabel = new JLabel(
+				Messages.getString("ProjectSettingsAction.LABEL_MARGIN")); //$NON-NLS-1$
+		JLabel paddinglabel = new JLabel(
+				Messages.getString("ProjectSettingsAction.LABEL_PADDING")); //$NON-NLS-1$
+		JLabel sizelabel = new JLabel(
+				Messages.getString("ProjectSettingsAction.LABEL_SIZE")); //$NON-NLS-1$
 
 		SpinnerModel marginmodel = new SpinnerNumberModel(factory.getMargin(),
 				0, MAX_PADDING_VALUE, 1);
@@ -62,7 +67,8 @@ public class ProjectSettingsAction extends BasicAction implements Action {
 		JSpinner widthspin = new JSpinner(widthmodel);
 		JSpinner heightspin = new JSpinner(heightmodel);
 
-		JCheckBox atlasbox = new JCheckBox(R.SETTINGS_ATLAS_PER_ANIMATION);
+		JCheckBox atlasbox = new JCheckBox(
+				Messages.getString("ProjectSettingsAction.LABEL_ATLAS_PER_ANIMATION")); //$NON-NLS-1$
 
 		atlasbox.setSelected(factory.isAtlasPerAnim());
 
@@ -113,9 +119,12 @@ public class ProjectSettingsAction extends BasicAction implements Action {
 
 		layout.linkSize(SwingConstants.HORIZONTAL, widthspin, heightspin);
 
-		int result = JOptionPane.showConfirmDialog(parent, panel,
-				R.APPLICATION_NAME, JOptionPane.YES_NO_OPTION,
-				JOptionPane.PLAIN_MESSAGE);
+		int result = JOptionPane
+				.showConfirmDialog(
+						parent,
+						panel,
+						Messages.getString("ProjectSettingsAction.TITLE"), JOptionPane.YES_NO_OPTION, //$NON-NLS-1$
+						JOptionPane.PLAIN_MESSAGE);
 
 		if (result == JOptionPane.YES_OPTION) {
 			factory.setMargin((Integer) marginmodel.getValue());

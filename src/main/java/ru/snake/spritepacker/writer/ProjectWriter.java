@@ -31,7 +31,7 @@ public class ProjectWriter implements CoreFactoryWalker {
 	}
 
 	@Override
-	public void startAnimation(String name) {
+	public void startAnimation(int index, String name) {
 		directory = new File(destination, Util.getValidDirName(name));
 
 		if (!directory.exists()) {
@@ -44,7 +44,7 @@ public class ProjectWriter implements CoreFactoryWalker {
 	}
 
 	@Override
-	public void startSprite(String name, int offsetX, int offsetY,
+	public void startSprite(int index, String name, int offsetX, int offsetY,
 			Texture texture) {
 		if (!directory.exists()) {
 			return;

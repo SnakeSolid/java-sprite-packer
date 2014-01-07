@@ -2,16 +2,17 @@ package ru.snake.spritepacker.util;
 
 import java.io.File;
 
-import ru.snake.spritepacker.R;
-
 public class Util {
 
-	private static final int MIN_PREFIX_LENGTH = 3;
+	private static final String ALLOWED_FILENAME_CHARS_REGEX = "[^a-zA-Z0-9.-]"; //$NON-NLS-1$
+	private static final String INDEX_REGEX = "[-0-9_ ]*$"; //$NON-NLS-1$
+	private static final String INDEX_AND_EXTENSION_REGEX = "[-0-9_ ]*\\.[A-Za-z]+$"; //$NON-NLS-1$
+	private static final String EXTENSION_REGEX = "\\.[A-Za-z]+$"; //$NON-NLS-1$
 
-	private static final String ALLOWED_FILENAME_CHARS_REGEX = "[^a-zA-Z0-9.-]";
-	private static final String INDEX_REGEX = "[-0-9_ ]*$";
-	private static final String INDEX_AND_EXTENSION_REGEX = "[-0-9_ ]*\\.[A-Za-z]+$";
-	private static final String EXTENSION_REGEX = "\\.[A-Za-z]+$";
+	private static final String DEFAULT_NAME = "none"; //$NON-NLS-1$;
+	private static final String PROJECT_FILE_DOT_SUFFIX = ".spz"; //$NON-NLS-1$;
+
+	private static final int MIN_PREFIX_LENGTH = 3;
 
 	public static String getCommonFilePrefix(File[] files) {
 		if (files.length == 0) {
@@ -21,7 +22,7 @@ public class Util {
 		if (files.length == 1) {
 			String result = files[0].getName();
 
-			result = result.replaceFirst(INDEX_AND_EXTENSION_REGEX, "");
+			result = result.replaceFirst(INDEX_AND_EXTENSION_REGEX, ""); //$NON-NLS-1$
 
 			return result;
 		}
@@ -50,7 +51,7 @@ public class Util {
 			}
 		}
 
-		commonPrefix = commonPrefix.replaceFirst(INDEX_REGEX, "");
+		commonPrefix = commonPrefix.replaceFirst(INDEX_REGEX, ""); //$NON-NLS-1$
 
 		return commonPrefix;
 	}
@@ -68,22 +69,22 @@ public class Util {
 	public static File checkForExtension(File file) {
 		String filename = file.getName();
 
-		if (!filename.endsWith(R.PROJECT_FILE_DOT_SUFFIX)) {
+		if (!filename.endsWith(PROJECT_FILE_DOT_SUFFIX)) {
 			String fullpath = file.getAbsolutePath();
 
-			file = new File(fullpath + R.PROJECT_FILE_DOT_SUFFIX);
+			file = new File(fullpath + PROJECT_FILE_DOT_SUFFIX);
 		}
 		return file;
 	}
 
 	public static String getFullName(File file) {
 		if (file == null) {
-			return "none";
+			return DEFAULT_NAME;
 		}
 
 		String result = file.getName();
 
-		result = result.replaceFirst(EXTENSION_REGEX, "");
+		result = result.replaceFirst(EXTENSION_REGEX, ""); //$NON-NLS-1$
 
 		return result;
 	}
@@ -91,19 +92,19 @@ public class Util {
 	public static String getValidFileName(String name, String extension) {
 		String filename = name;
 
-		filename = filename.replaceAll(EXTENSION_REGEX, "");
-		filename = filename.replaceAll(ALLOWED_FILENAME_CHARS_REGEX, "_");
-		filename = filename.replaceAll("__+", "_");
+		filename = filename.replaceAll(EXTENSION_REGEX, ""); //$NON-NLS-1$
+		filename = filename.replaceAll(ALLOWED_FILENAME_CHARS_REGEX, "_"); //$NON-NLS-1$
+		filename = filename.replaceAll("__+", "_"); //$NON-NLS-1$ //$NON-NLS-2$
 
-		return filename + "." + extension;
+		return filename + "." + extension; //$NON-NLS-1$
 	}
 
 	public static String getValidDirName(String name) {
 		String filename = name;
 
-		filename = filename.replaceAll(EXTENSION_REGEX, "");
-		filename = filename.replaceAll(ALLOWED_FILENAME_CHARS_REGEX, "_");
-		filename = filename.replaceAll("__+", "_");
+		filename = filename.replaceAll(EXTENSION_REGEX, ""); //$NON-NLS-1$
+		filename = filename.replaceAll(ALLOWED_FILENAME_CHARS_REGEX, "_"); //$NON-NLS-1$
+		filename = filename.replaceAll("__+", "_"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		return filename;
 	}

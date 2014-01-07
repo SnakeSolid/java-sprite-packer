@@ -16,7 +16,7 @@ import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeListener;
 
-import ru.snake.spritepacker.R;
+import ru.snake.spritepacker.Messages;
 import ru.snake.spritepacker.actions.BasicAction;
 import ru.snake.spritepacker.component.AnimationView;
 import ru.snake.spritepacker.core.Animation;
@@ -27,9 +27,7 @@ import ru.snake.spritepacker.util.Dialogs;
 @SuppressWarnings("serial")
 public class OffsetAnimationAction extends BasicAction implements Action {
 
-	private static final int MIN_ANIMATION_SIZE = 400;
-	private static final int MIN_OFFSET_VALUE = -512;
-	private static final int MAX_OFFSET_VALUE = 512;
+	private static final String ICON_NAME = "align";
 
 	private final Component parent;
 	private final CoreFactory factory;
@@ -38,10 +36,10 @@ public class OffsetAnimationAction extends BasicAction implements Action {
 		this.parent = parent;
 		this.factory = factory;
 
-		putValue(NAME, "Offset animation...");
+		putValue(NAME, Messages.getString("OffsetAnimationAction.NAME")); //$NON-NLS-1$
 		putValue(MNEMONIC_KEY, KeyEvent.VK_O);
 
-		setIcon("align", true);
+		setIcon(ICON_NAME, true);
 	}
 
 	@Override
@@ -49,7 +47,8 @@ public class OffsetAnimationAction extends BasicAction implements Action {
 		Animation animation = factory.getActiveAnimation();
 
 		if (animation == null) {
-			Dialogs.warning(parent, R.SELECT_ANIMATION_BEFORE);
+			Dialogs.warning(parent,
+					Messages.getString("OffsetAnimationAction.NO_ANIMATION")); //$NON-NLS-1$
 
 			return;
 		}
@@ -62,8 +61,10 @@ public class OffsetAnimationAction extends BasicAction implements Action {
 
 		// ---------------------------------------------------
 
-		JLabel offsxlabel = new JLabel(R.OFFSET_ANIMATION_X);
-		JLabel offsylabel = new JLabel(R.OFFSET_ANIMATION_Y);
+		JLabel offsxlabel = new JLabel(
+				Messages.getString("OffsetAnimationAction.LABEL_X_OFFSET")); //$NON-NLS-1$
+		JLabel offsylabel = new JLabel(
+				Messages.getString("OffsetAnimationAction.LABEL_Y_OFFSET")); //$NON-NLS-1$
 
 		SpinnerModel offsxmodel = new SpinnerNumberModel(baseOffset.x,
 				MIN_OFFSET_VALUE, MAX_OFFSET_VALUE, 1);
@@ -120,9 +121,12 @@ public class OffsetAnimationAction extends BasicAction implements Action {
 								.addComponent(offsylabel)
 								.addComponent(offsyspin)));
 
-		int result = JOptionPane.showConfirmDialog(parent, panel,
-				R.APPLICATION_NAME, JOptionPane.YES_NO_OPTION,
-				JOptionPane.PLAIN_MESSAGE);
+		int result = JOptionPane
+				.showConfirmDialog(
+						parent,
+						panel,
+						Messages.getString("OffsetAnimationAction.TITLE"), JOptionPane.YES_NO_OPTION, //$NON-NLS-1$
+						JOptionPane.PLAIN_MESSAGE);
 
 		// ---------------------------------------------------
 
@@ -137,5 +141,9 @@ public class OffsetAnimationAction extends BasicAction implements Action {
 
 		factory.updateAnimations();
 	}
+
+	private static final int MIN_ANIMATION_SIZE = 400;
+	private static final int MIN_OFFSET_VALUE = -512;
+	private static final int MAX_OFFSET_VALUE = 512;
 
 }

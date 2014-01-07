@@ -16,7 +16,7 @@ public class AnimationWriter implements CoreFactoryWalker {
 	private final String name;
 	private final String format;
 
-	private boolean writeSprite;
+	private boolean needWrite;
 
 	public AnimationWriter(File destination, String name, String format) {
 		this.destination = destination;
@@ -33,8 +33,8 @@ public class AnimationWriter implements CoreFactoryWalker {
 	}
 
 	@Override
-	public void startAnimation(String name) {
-		writeSprite = this.name.equals(name);
+	public void startAnimation(int index, String name) {
+		needWrite = this.name.equals(name);
 	}
 
 	@Override
@@ -42,9 +42,9 @@ public class AnimationWriter implements CoreFactoryWalker {
 	}
 
 	@Override
-	public void startSprite(String name, int offsetX, int offsetY,
+	public void startSprite(int index, String name, int offsetX, int offsetY,
 			Texture texture) {
-		if (!writeSprite) {
+		if (!needWrite) {
 			return;
 		}
 

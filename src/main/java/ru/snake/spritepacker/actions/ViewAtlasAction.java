@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-import ru.snake.spritepacker.R;
+import ru.snake.spritepacker.Messages;
 import ru.snake.spritepacker.component.TextureAtlas;
 import ru.snake.spritepacker.core.CoreFactory;
 import ru.snake.spritepacker.core.packer.ImageData;
@@ -27,6 +27,8 @@ import ru.snake.spritepacker.util.Dialogs;
 @SuppressWarnings("serial")
 public class ViewAtlasAction extends BasicAction implements Action {
 
+	private static final String ICON_NAME = "atlas";
+
 	private final Component parent;
 	private final CoreFactory factory;
 
@@ -34,10 +36,10 @@ public class ViewAtlasAction extends BasicAction implements Action {
 		this.parent = parent;
 		this.factory = factory;
 
-		putValue(NAME, "View atlas");
+		putValue(NAME, Messages.getString("ViewAtlasAction.NAME")); //$NON-NLS-1$
 		putValue(MNEMONIC_KEY, KeyEvent.VK_V);
 
-		setIcon("atlas", false);
+		setIcon(ICON_NAME, false);
 	}
 
 	@Override
@@ -45,13 +47,15 @@ public class ViewAtlasAction extends BasicAction implements Action {
 		PackerOutput output = factory.createTextureAtlas();
 
 		if (output.atlasSizes.isEmpty()) {
-			Dialogs.warning(parent, R.CANNT_CREATE_ATLAS);
+			Dialogs.warning(parent,
+					Messages.getString("ViewAtlasAction.ZERO_ATLASES")); //$NON-NLS-1$
 
 			return;
 		}
 
 		if (output.packedImages.isEmpty()) {
-			Dialogs.warning(parent, R.CANNT_CREATE_ATLAS);
+			Dialogs.warning(parent,
+					Messages.getString("ViewAtlasAction.ZERO_IMAGES")); //$NON-NLS-1$
 
 			return;
 		}
@@ -70,8 +74,9 @@ public class ViewAtlasAction extends BasicAction implements Action {
 			}
 
 			Dimension size = atlasEntry.getValue();
-			String sizeStr = String.format(R.ATLAS_SIZE_FORMAT, size.width,
-					size.height);
+			String sizeStr = String.format(
+					Messages.getString("ViewAtlasAction.ATLAS_SIZE_FORMAT"), //$NON-NLS-1$
+					size.width, size.height);
 
 			LayoutManager atlasLayout = new BorderLayout(4, 4);
 			JPanel atlasPane = new JPanel(atlasLayout);
@@ -88,7 +93,8 @@ public class ViewAtlasAction extends BasicAction implements Action {
 					.add(String.valueOf(output.getAtlasName(index)), atlasPane);
 		}
 
-		JOptionPane.showMessageDialog(parent, atlasTabs, R.APPLICATION_NAME,
+		JOptionPane.showMessageDialog(parent, atlasTabs,
+				Messages.getString("ViewAtlasAction.TITLE"), //$NON-NLS-1$
 				JOptionPane.PLAIN_MESSAGE);
 	}
 

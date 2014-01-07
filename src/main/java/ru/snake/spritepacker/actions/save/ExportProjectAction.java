@@ -7,6 +7,7 @@ import java.io.File;
 
 import javax.swing.Action;
 
+import ru.snake.spritepacker.Messages;
 import ru.snake.spritepacker.actions.BasicAction;
 import ru.snake.spritepacker.core.CoreFactory;
 import ru.snake.spritepacker.util.Dialogs;
@@ -15,6 +16,8 @@ import ru.snake.spritepacker.writer.ProjectWriter;
 @SuppressWarnings("serial")
 public class ExportProjectAction extends BasicAction implements Action {
 
+	private static final String ICON_NAME = "export"; //$NON-NLS-1$
+
 	private final Component parent;
 	private final CoreFactory factory;
 
@@ -22,10 +25,10 @@ public class ExportProjectAction extends BasicAction implements Action {
 		this.parent = parent;
 		this.factory = factory;
 
-		putValue(NAME, "Export project...");
+		putValue(NAME, Messages.getString("ExportProjectAction.NAME")); //$NON-NLS-1$
 		putValue(MNEMONIC_KEY, KeyEvent.VK_P);
 
-		setIcon("export", true);
+		setIcon(ICON_NAME, true);
 	}
 
 	@Override

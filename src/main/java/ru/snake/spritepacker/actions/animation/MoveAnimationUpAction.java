@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.Action;
 
-import ru.snake.spritepacker.R;
+import ru.snake.spritepacker.Messages;
 import ru.snake.spritepacker.actions.BasicAction;
 import ru.snake.spritepacker.core.Animation;
 import ru.snake.spritepacker.core.CoreFactory;
@@ -15,6 +15,8 @@ import ru.snake.spritepacker.util.Dialogs;
 @SuppressWarnings("serial")
 public class MoveAnimationUpAction extends BasicAction implements Action {
 
+	private static final String ICON_NAME = "moveup";
+
 	private final Component parent;
 	private final CoreFactory factory;
 
@@ -22,10 +24,10 @@ public class MoveAnimationUpAction extends BasicAction implements Action {
 		this.parent = parent;
 		this.factory = factory;
 
-		putValue(NAME, "Move animation up");
+		putValue(NAME, Messages.getString("MoveAnimationUpAction.NAME")); //$NON-NLS-1$
 		putValue(MNEMONIC_KEY, KeyEvent.VK_U);
 
-		setIcon("moveup", true);
+		setIcon(ICON_NAME, true);
 	}
 
 	@Override
@@ -33,7 +35,8 @@ public class MoveAnimationUpAction extends BasicAction implements Action {
 		Animation animation = factory.getActiveAnimation();
 
 		if (animation == null) {
-			Dialogs.warning(parent, R.SELECT_ANIMATION_BEFORE);
+			Dialogs.warning(parent,
+					Messages.getString("MoveAnimationUpAction.NO_ANIMATION")); //$NON-NLS-1$
 
 			return;
 		}

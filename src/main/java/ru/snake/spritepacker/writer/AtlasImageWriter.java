@@ -94,7 +94,7 @@ public class AtlasImageWriter implements CoreFactoryWalker {
 	}
 
 	@Override
-	public void startAnimation(String name) {
+	public void startAnimation(int index, String name) {
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class AtlasImageWriter implements CoreFactoryWalker {
 	}
 
 	@Override
-	public void startSprite(String name, int offsetX, int offsetY,
+	public void startSprite(int index, String name, int offsetX, int offsetY,
 			Texture texture) {
 	}
 

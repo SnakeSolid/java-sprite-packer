@@ -8,7 +8,7 @@ import java.util.List;
 
 import javax.swing.Action;
 
-import ru.snake.spritepacker.R;
+import ru.snake.spritepacker.Messages;
 import ru.snake.spritepacker.actions.BasicAction;
 import ru.snake.spritepacker.core.Animation;
 import ru.snake.spritepacker.core.CoreFactory;
@@ -18,6 +18,8 @@ import ru.snake.spritepacker.util.Dialogs;
 @SuppressWarnings("serial")
 public class MoveSpriteUpAction extends BasicAction implements Action {
 
+	private static final String ICON_NAME = "moveup"; //$NON-NLS-1$
+
 	private final Component parent;
 	private final CoreFactory factory;
 
@@ -25,10 +27,10 @@ public class MoveSpriteUpAction extends BasicAction implements Action {
 		this.parent = parent;
 		this.factory = factory;
 
-		putValue(NAME, "Move sprite up");
+		putValue(NAME, Messages.getString("MoveSpriteUpAction.NAME")); //$NON-NLS-1$
 		putValue(MNEMONIC_KEY, KeyEvent.VK_U);
 
-		setIcon("moveup", true);
+		setIcon(ICON_NAME, true);
 	}
 
 	@Override
@@ -37,7 +39,8 @@ public class MoveSpriteUpAction extends BasicAction implements Action {
 		Sprite sprite = factory.getActiveSprite();
 
 		if (animation == null || sprite == null) {
-			Dialogs.warning(parent, R.SELECT_SPRITE_BEFORE);
+			Dialogs.warning(parent,
+					Messages.getString("MoveSpriteUpAction.NO_SPRITE")); //$NON-NLS-1$
 
 			return;
 		}

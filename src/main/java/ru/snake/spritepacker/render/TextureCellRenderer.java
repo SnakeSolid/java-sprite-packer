@@ -5,12 +5,13 @@ import java.awt.image.RenderedImage;
 import javax.swing.Icon;
 import javax.swing.ListCellRenderer;
 
-import ru.snake.spritepacker.R;
 import ru.snake.spritepacker.core.Texture;
 
 @SuppressWarnings("serial")
 public class TextureCellRenderer extends AbstractIconCellRender implements
 		ListCellRenderer {
+
+	private static final String TEXTURE_NAME_FORMAT = "<HTML>width=%d<BR>height=%d"; //$NON-NLS-1$
 
 	@Override
 	protected boolean isValueValid(Object value) {
@@ -30,7 +31,7 @@ public class TextureCellRenderer extends AbstractIconCellRender implements
 		Texture texture = (Texture) value;
 		RenderedImage image = texture.image;
 
-		label.setText(String.format(R.TEXTURE_RENDER_TEXT, image.getWidth(),
+		label.setText(String.format(TEXTURE_NAME_FORMAT, image.getWidth(),
 				image.getHeight()));
 	}
 }

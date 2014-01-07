@@ -1,40 +1,25 @@
 package ru.snake.spritepacker.writer;
 
 import java.awt.Dimension;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import ru.snake.spritepacker.core.CoreFactoryWalker;
 import ru.snake.spritepacker.core.Texture;
 import ru.snake.spritepacker.core.packer.ImageData;
 import ru.snake.spritepacker.core.packer.PackerOutput;
-import ru.snake.spritepacker.util.Dialogs;
 
-public class AtlasTextWriter implements CoreFactoryWalker {
+public class AtlasTextWriter extends TextWriter implements CoreFactoryWalker {
 
 	private final PackerOutput output;
 	private final File destination;
 	private final int atlasId;
 
-	private final Map<String, String> fields;
-
 	private String prefix;
 	private String postfix;
-	private String format;
 
 	private String atlasName;
 
 	private int animationIndex;
-	private int spriteIndex;
-
-	private Writer fileWriter;
-	private Writer bufferedWriter;
 
 	public AtlasTextWriter(PackerOutput output, File destination, int atlasId) {
 		this.output = output;
@@ -43,11 +28,8 @@ public class AtlasTextWriter implements CoreFactoryWalker {
 
 		atlasName = output.getAtlasName(atlasId);
 
-		fields = new HashMap<String, String>();
-
 		prefix = "";
 		postfix = "";
-		format = "";
 	}
 
 	public void setPrefix(String prefix) {
@@ -58,33 +40,16 @@ public class AtlasTextWriter implements CoreFactoryWalker {
 		this.postfix = postfix;
 	}
 
-	public void setFormat(String format) {
-		this.format = format;
-	}
-
 	@Override
 	public void start() {
-		fileWriter = null;
-		bufferedWriter = null;
-
-		try {
-			fileWriter = new FileWriter(getOutputFile());
-		} catch (IOException ex) {
-			Dialogs.error(null, ex.getMessage());
-
-			return;
-		}
-
-		bufferedWriter = new BufferedWriter(fileWriter);
-
-		fields.clear();
+		startWrite(getOutputFile());
 
 		Dimension atlasSize = output.atlasSizes.get(atlasId);
 
-		fields.put("{atlas.id}", String.valueOf(atlasId));
-		fields.put("{atlas.name}", atlasName);
-		fields.put("{atlas.width}", String.valueOf(atlasSize.width));
-		fields.put("{atlas.height}", String.valueOf(atlasSize.height));
+		setValue("atlas.id", atlasId);
+		setValue("atlas.name", atlasName);
+		setValue("atlas.width", atlasSize.width);
+		setValue("atlas.height", atlasSize.height);
 
 		animationIndex = 0;
 	}
@@ -108,52 +73,35 @@ public class AtlasTextWriter implements CoreFactoryWalker {
 
 	@Override
 	public void end() {
-		if (fileWriter == null || bufferedWriter == null) {
-			return;
-		}
-
-		try {
-			bufferedWriter.close();
-			fileWriter.close();
-		} catch (IOException ex) {
-			Dialogs.error(null, ex.getMessage());
-		}
-
-		fileWriter = null;
-		bufferedWriter = null;
+		endWrite();
 	}
 
 	@Override
-	public void startAnimation(String name) {
-		if (fileWriter == null || bufferedWriter == null) {
-			return;
-		}
+	public void startAnimation(int index, String name) {
+		setValue("animation.id", index);
+		setValue("animation.name", name);
 
-		fields.put("{animation.id}", String.valueOf(animationIndex));
-		fields.put("{animation.name}", name);
-
-		spriteIndex = 0;
+		animationIndex = index;
 	}
 
 	@Override
 	public void endAnimation() {
-		animationIndex++;
 	}
 
 	@Override
-	public void startSprite(String name, int offsetX, int offsetY,
+	public void startSprite(int index, String name, int offsetX, int offsetY,
 			Texture texture) {
-		if (fileWriter == null || bufferedWriter == null) {
-			return;
-		}
-
-		fields.put("{sprite.id}", String.valueOf(spriteIndex));
-		fields.put("{sprite.name}", name);
-		fields.put("{sprite.offsetx}", String.valueOf(offsetX));
-		fields.put("{sprite.offsety}", String.valueOf(offsetY));
+		setValue("sprite.id", index);
+		setValue("sprite.name", name);
+		setValue("sprite.offsetx", offsetX);
+		setValue("sprite.offsety", offsetY);
 
 		for (ImageData data : output.packedImages) {
 			if (data.atlas != atlasId) {
+				continue;
+			}
+
+			if (data.animation != animationIndex) {
 				continue;
 			}
 
@@ -161,44 +109,17 @@ public class AtlasTextWriter implements CoreFactoryWalker {
 				continue;
 			}
 
-			fields.put("{texture.left}", String.valueOf(data.x));
-			fields.put("{texture.top}", String.valueOf(data.y));
-			fields.put("{texture.width}", String.valueOf(data.width));
-			fields.put("{texture.height}", String.valueOf(data.height));
-			fields.put("{texture.right}", String.valueOf(data.x + data.width));
-			fields.put("{texture.bottom}", String.valueOf(data.y + data.height));
-
-			fields.put("{sprite.offset.right}",
-					String.valueOf(data.width - offsetX));
-			fields.put("{sprite.offset.bottom}",
-					String.valueOf(data.height - offsetY));
+			setValue("texture.left", data.x);
+			setValue("texture.top", data.y);
+			setValue("texture.width", data.width);
+			setValue("texture.height", data.height);
 
 			writeLine();
 		}
 	}
 
-	private void writeLine() {
-		String line = format;
-
-		for (Entry<String, String> eachEntry : fields.entrySet()) {
-			line = line.replace(eachEntry.getKey(), eachEntry.getValue());
-		}
-
-		try {
-			bufferedWriter.write(line);
-			bufferedWriter.write('\n');
-		} catch (IOException e) {
-			Dialogs.error(null, e.getMessage());
-		}
-	}
-
 	@Override
 	public void endSprite() {
-		if (fileWriter == null || bufferedWriter == null) {
-			return;
-		}
-
-		spriteIndex++;
 	}
 
 }

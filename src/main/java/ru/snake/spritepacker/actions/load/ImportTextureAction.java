@@ -7,7 +7,7 @@ import java.io.File;
 
 import javax.swing.Action;
 
-import ru.snake.spritepacker.R;
+import ru.snake.spritepacker.Messages;
 import ru.snake.spritepacker.actions.BasicAction;
 import ru.snake.spritepacker.core.CoreFactory;
 import ru.snake.spritepacker.util.Dialogs;
@@ -22,7 +22,7 @@ public class ImportTextureAction extends BasicAction implements Action {
 		this.parent = parent;
 		this.factory = factory;
 
-		putValue(NAME, "Import texture...");
+		putValue(NAME, Messages.getString("ImportTextureAction.NAME")); //$NON-NLS-1$
 		putValue(MNEMONIC_KEY, KeyEvent.VK_T);
 	}
 
@@ -34,7 +34,8 @@ public class ImportTextureAction extends BasicAction implements Action {
 			return;
 		}
 
-		if (Dialogs.confirm(parent, R.CROP_IMAGES_WHILE_IMPORT)) {
+		if (Dialogs.confirm(parent,
+				Messages.getString("ImportTextureAction.MESSAGE"))) { //$NON-NLS-1$
 			factory.createTexture(file, null);
 		} else {
 			factory.createTexture(file);

@@ -7,7 +7,7 @@ import java.util.List;
 
 import javax.swing.Action;
 
-import ru.snake.spritepacker.R;
+import ru.snake.spritepacker.Messages;
 import ru.snake.spritepacker.actions.BasicAction;
 import ru.snake.spritepacker.core.Animation;
 import ru.snake.spritepacker.core.CoreFactory;
@@ -24,7 +24,7 @@ public class CenterAnimationAction extends BasicAction implements Action {
 		this.parent = parent;
 		this.factory = factory;
 
-		putValue(NAME, "Center animation...");
+		putValue(NAME, Messages.getString("CenterAnimationAction.NAME")); //$NON-NLS-1$
 		putValue(MNEMONIC_KEY, KeyEvent.VK_E);
 	}
 
@@ -33,12 +33,14 @@ public class CenterAnimationAction extends BasicAction implements Action {
 		Animation animation = factory.getActiveAnimation();
 
 		if (animation == null) {
-			Dialogs.warning(parent, R.SELECT_ANIMATION_BEFORE);
+			Dialogs.warning(parent,
+					Messages.getString("CenterAnimationAction.NO_ANIMATION")); //$NON-NLS-1$
 
 			return;
 		}
 
-		if (Dialogs.confirm(parent, R.REALLY_CENTER_ANIMATION)) {
+		if (Dialogs.confirm(parent,
+				Messages.getString("CenterAnimationAction.MESSAGE"))) { //$NON-NLS-1$
 			List<Sprite> list = animation.getSprites();
 
 			for (Sprite each : list) {

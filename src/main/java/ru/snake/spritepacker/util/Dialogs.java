@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import ru.snake.spritepacker.R;
+import ru.snake.spritepacker.Messages;
 import ru.snake.spritepacker.component.AnimationView;
 import ru.snake.spritepacker.component.ImageView;
 import ru.snake.spritepacker.component.SpriteView;
@@ -21,12 +21,19 @@ import ru.snake.spritepacker.core.Sprite;
 
 public class Dialogs {
 
+	private static final String APPLICATION_NAME = "Texture packer"; //$NON-NLS-1$
+	private static final String ALL_IMAGE_FORMATS = "All supported image formats"; //$NON-NLS-1$
+	private static final String FILE_FILTER_FORMAT = "%s image file format (*.%s)"; //$NON-NLS-1$
+
+	private static final String PROJECT_FILE_FORMAT = "Sprite packer project (*.spz)"; //$NON-NLS-1$
+	private static final String PROJECT_FILE_SUFFIX = "spz"; //$NON-NLS-1$
+
 	private static final File[] NO_FILES = {};
 
-	private static File lastImagesDir = new File(System.getProperty("user.dir"));
-	private static File lastExportDir = new File(System.getProperty("user.dir"));
+	private static File lastImagesDir = new File(System.getProperty("user.dir")); //$NON-NLS-1$
+	private static File lastExportDir = new File(System.getProperty("user.dir")); //$NON-NLS-1$
 	private static File lastProjectDir = new File(
-			System.getProperty("user.dir"));
+			System.getProperty("user.dir")); //$NON-NLS-1$
 
 	public static File[] getImages(Component parent) {
 		JFileChooser chooser = createImageChooser();
@@ -59,7 +66,7 @@ public class Dialogs {
 		String[] suffixes = ImageIO.getReaderFileSuffixes();
 		FileFilter filter;
 
-		filter = new FileNameExtensionFilter(R.ALL_IMAGE_FORMATS, suffixes);
+		filter = new FileNameExtensionFilter(ALL_IMAGE_FORMATS, suffixes);
 
 		chooser.setFileFilter(filter);
 
@@ -68,8 +75,7 @@ public class Dialogs {
 			String uppersuffix = suffix.toUpperCase();
 			String name;
 
-			name = String
-					.format(R.FILE_FILTER_FORMAT, uppersuffix, lowersuffix);
+			name = String.format(FILE_FILTER_FORMAT, uppersuffix, lowersuffix);
 
 			filter = new FileNameExtensionFilter(name, lowersuffix);
 
@@ -88,7 +94,7 @@ public class Dialogs {
 
 		ImageView view = new ImageView(image);
 
-		JOptionPane.showOptionDialog(parent, view, R.APPLICATION_NAME,
+		JOptionPane.showOptionDialog(parent, view, APPLICATION_NAME,
 				JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null,
 				null, null);
 	}
@@ -119,7 +125,7 @@ public class Dialogs {
 
 	public static boolean confirm(Component parent, String message) {
 		int n = JOptionPane.showConfirmDialog(parent, message,
-				R.APPLICATION_NAME, JOptionPane.YES_NO_OPTION);
+				APPLICATION_NAME, JOptionPane.YES_NO_OPTION);
 
 		return n == JOptionPane.YES_OPTION;
 	}
@@ -140,8 +146,8 @@ public class Dialogs {
 		JFileChooser chooser = new JFileChooser(lastProjectDir);
 		FileFilter filter;
 
-		filter = new FileNameExtensionFilter(R.PROJECT_FILE_FORMAT,
-				R.PROJECT_FILE_SUFFIX);
+		filter = new FileNameExtensionFilter(PROJECT_FILE_FORMAT,
+				PROJECT_FILE_SUFFIX);
 
 		chooser.setFileFilter(filter);
 		chooser.setAcceptAllFileFilterUsed(false);
@@ -163,23 +169,23 @@ public class Dialogs {
 
 	public static int yesnocancel(Component parent, String message) {
 		int result = JOptionPane.showConfirmDialog(parent, message,
-				R.APPLICATION_NAME, JOptionPane.YES_NO_CANCEL_OPTION);
+				APPLICATION_NAME, JOptionPane.YES_NO_CANCEL_OPTION);
 
 		return result;
 	}
 
 	public static void message(Component parent, String message) {
-		JOptionPane.showMessageDialog(parent, message, R.APPLICATION_NAME,
+		JOptionPane.showMessageDialog(parent, message, APPLICATION_NAME,
 				JOptionPane.PLAIN_MESSAGE);
 	}
 
 	public static void warning(Component parent, String message) {
-		JOptionPane.showMessageDialog(parent, message, R.APPLICATION_NAME,
+		JOptionPane.showMessageDialog(parent, message, APPLICATION_NAME,
 				JOptionPane.WARNING_MESSAGE);
 	}
 
 	public static void error(Component parent, String message) {
-		JOptionPane.showMessageDialog(parent, message, R.APPLICATION_NAME,
+		JOptionPane.showMessageDialog(parent, message, APPLICATION_NAME,
 				JOptionPane.ERROR_MESSAGE);
 	}
 
@@ -216,8 +222,7 @@ public class Dialogs {
 			String uppersuffix = format.toUpperCase();
 			String name;
 
-			name = String
-					.format(R.FILE_FILTER_FORMAT, uppersuffix, lowersuffix);
+			name = String.format(FILE_FILTER_FORMAT, uppersuffix, lowersuffix);
 
 			formatnames.put(name, lowersuffix);
 		}
@@ -225,9 +230,12 @@ public class Dialogs {
 		Object[] values = formatnames.keySet().toArray();
 		String defaultformat = formatnames.keySet().iterator().next();
 
-		String choosen = (String) JOptionPane.showInputDialog(parent,
-				R.SELECT_EXPORT_FILE_FORMAT, R.APPLICATION_NAME,
-				JOptionPane.QUESTION_MESSAGE, null, values, defaultformat);
+		String choosen = (String) JOptionPane
+				.showInputDialog(
+						parent,
+						Messages.getString("Dialogs.MESSAGE_EXPORT_FORMAT"), APPLICATION_NAME, //$NON-NLS-1$
+						JOptionPane.QUESTION_MESSAGE, null, values,
+						defaultformat);
 
 		return formatnames.get(choosen);
 	}

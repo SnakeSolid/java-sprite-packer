@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.Action;
 
-import ru.snake.spritepacker.R;
+import ru.snake.spritepacker.Messages;
 import ru.snake.spritepacker.actions.BasicAction;
 import ru.snake.spritepacker.core.Animation;
 import ru.snake.spritepacker.core.CoreFactory;
@@ -22,7 +22,7 @@ public class AlignAnimationAction extends BasicAction implements Action {
 		this.parent = parent;
 		this.factory = factory;
 
-		putValue(NAME, "Align animations");
+		putValue(NAME, Messages.getString("AlignAnimationAction.NAME")); //$NON-NLS-1$
 		putValue(MNEMONIC_KEY, KeyEvent.VK_L);
 	}
 
@@ -31,13 +31,16 @@ public class AlignAnimationAction extends BasicAction implements Action {
 		Animation animation = factory.getActiveAnimation();
 
 		if (animation == null) {
-			Dialogs.warning(parent, R.SELECT_ANIMATION_BEFORE);
+			Dialogs.warning(parent,
+					Messages.getString("AlignAnimationAction.NO_ANIMATION")); //$NON-NLS-1$
 
 			return;
 		}
 
 		String message;
-		message = String.format(R.SURE_ALIGN_ANIMATIONS_BY, animation.name);
+		message = String.format(
+				Messages.getString("AlignAnimationAction.MESSAGE"), //$NON-NLS-1$
+				animation.name);
 
 		if (Dialogs.confirm(parent, message)) {
 			factory.alignAnimationsBy(animation);

@@ -7,6 +7,7 @@ import java.util.Random;
 
 import javax.swing.Action;
 import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -19,9 +20,8 @@ import javax.swing.ListModel;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
-import javax.swing.GroupLayout.Alignment;
 
-import ru.snake.spritepacker.R;
+import ru.snake.spritepacker.Messages;
 import ru.snake.spritepacker.actions.BasicAction;
 import ru.snake.spritepacker.core.Animation;
 import ru.snake.spritepacker.core.CoreFactory;
@@ -33,6 +33,9 @@ import ru.snake.spritepacker.util.Dialogs;
 @SuppressWarnings("serial")
 public class CreateSpriteAction extends BasicAction implements Action {
 
+	private static final String ICON_NAME = "new"; //$NON-NLS-1$
+	private static final String NAME_FORMAT = "sprite-%d";
+
 	private static final int TEXTURES_LIST_HEIGHT = 300;
 
 	private final Component parent;
@@ -42,10 +45,10 @@ public class CreateSpriteAction extends BasicAction implements Action {
 		this.parent = parent;
 		this.factory = factory;
 
-		putValue(NAME, "Create sprite");
+		putValue(NAME, Messages.getString("CreateSpriteAction.NAME")); //$NON-NLS-1$
 		putValue(MNEMONIC_KEY, KeyEvent.VK_C);
 
-		setIcon("new", true);
+		setIcon(ICON_NAME, true);
 	}
 
 	@Override
@@ -53,7 +56,8 @@ public class CreateSpriteAction extends BasicAction implements Action {
 		Animation animation = factory.getActiveAnimation();
 
 		if (animation == null) {
-			Dialogs.warning(parent, R.SELECT_ANIM_TO_ADD_SPRITE);
+			Dialogs.warning(parent,
+					Messages.getString("CreateSpriteAction.NO_ANIMATION")); //$NON-NLS-1$
 
 			return;
 		}
@@ -61,12 +65,12 @@ public class CreateSpriteAction extends BasicAction implements Action {
 		Random random = new Random();
 		String defaultname;
 
-		defaultname = String.format(R.DEFAULT_SPRITE_NAME_FORMAT,
-				random.nextInt());
+		defaultname = String.format(NAME_FORMAT, random.nextInt());
 
 		// ===================================================
 
-		JLabel offslabel = new JLabel("Select sprite offsets:");
+		JLabel offslabel = new JLabel(
+				Messages.getString("CreateSpriteAction.LABEL_OFFSET")); //$NON-NLS-1$
 		SpinnerModel offsxmodel = new SpinnerNumberModel(0, Integer.MIN_VALUE,
 				Integer.MAX_VALUE, 1);
 		SpinnerModel offsymodel = new SpinnerNumberModel(0, Integer.MIN_VALUE,
@@ -76,13 +80,15 @@ public class CreateSpriteAction extends BasicAction implements Action {
 
 		// ---------------------------------------------------
 
-		JLabel namelabel = new JLabel("Select sprite name:");
+		JLabel namelabel = new JLabel(
+				Messages.getString("CreateSpriteAction.LABEL_NAME")); //$NON-NLS-1$
 		JTextField namefield = new JTextField(defaultname, 20);
 
 		// ---------------------------------------------------
 
 		ListModel textmodel = factory.getTexturesModel();
-		JLabel texlabel = new JLabel("Select sprite texture:");
+		JLabel texlabel = new JLabel(
+				Messages.getString("CreateSpriteAction.LABEL_TEXTURE")); //$NON-NLS-1$
 		JList texlist = new JList(textmodel);
 		JScrollPane texscroll = new JScrollPane(texlist);
 		ListCellRenderer texrender = new TextureCellRenderer();
@@ -147,9 +153,12 @@ public class CreateSpriteAction extends BasicAction implements Action {
 		layout.linkSize(SwingConstants.HORIZONTAL, offxspin, offyspin);
 
 		while (true) {
-			int result = JOptionPane.showConfirmDialog(parent, panel,
-					R.APPLICATION_NAME, JOptionPane.YES_NO_OPTION,
-					JOptionPane.PLAIN_MESSAGE);
+			int result = JOptionPane
+					.showConfirmDialog(
+							parent,
+							panel,
+							Messages.getString("CreateSpriteAction.TITLE"), JOptionPane.YES_NO_OPTION, //$NON-NLS-1$
+							JOptionPane.PLAIN_MESSAGE);
 
 			if (result == JOptionPane.YES_OPTION) {
 				Object offsxselected = offsxmodel.getValue();
@@ -162,7 +171,8 @@ public class CreateSpriteAction extends BasicAction implements Action {
 				}
 
 				if (texselected == null) {
-					Dialogs.error(parent, R.YOU_MUST_CHOOSE_TEXTURE);
+					Dialogs.error(parent,
+							Messages.getString("CreateSpriteAction.NO_TEXTURE")); //$NON-NLS-1$
 
 					continue;
 				}
