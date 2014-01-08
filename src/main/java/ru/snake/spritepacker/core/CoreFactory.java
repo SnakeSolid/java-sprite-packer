@@ -159,8 +159,8 @@ public class CoreFactory {
 
 		int top = 0;
 		int left = 0;
-		int bottom = height - 1;
-		int right = width - 1;
+		int bottom = height;
+		int right = width;
 
 		int[] rgb = new int[width * height];
 
