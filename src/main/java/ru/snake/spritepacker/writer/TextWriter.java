@@ -84,6 +84,12 @@ public abstract class TextWriter implements CoreFactoryWalker {
 	}
 
 	private void writeValue(Value value) {
+		String text = value.getString();
+
+		if (text.isEmpty()) {
+			return;
+		}
+
 		try {
 			bufferedWriter.write(value.getString());
 			bufferedWriter.write('\n');

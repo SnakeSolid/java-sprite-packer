@@ -16,4 +16,6 @@ public interface ExpressionVisitor {
 
 	public void visitDiv(DivExpression expression);
 
+	public void visitMod(ModExpression expression);
+
 }

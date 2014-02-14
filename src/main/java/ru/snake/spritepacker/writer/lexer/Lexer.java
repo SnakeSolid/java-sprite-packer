@@ -9,7 +9,7 @@ public class Lexer {
 
 	private static final String SYMBOL_LBRACE = "{";
 	private static final String SYMBOL_WHITESPACE = " \t\r\n";
-	private static final String SYMBOL_OPERATION = "+-*/";
+	private static final String SYMBOL_OPERATION = "+-*/%";
 	private static final String SYMBOL_VARIABLE = ".abcdefghijklmnopqrstuvwxyz";
 	private static final String SYMBOL_NUMBAR = "0123456789";
 	private static final String SYMBOL_RBRACE = "}";

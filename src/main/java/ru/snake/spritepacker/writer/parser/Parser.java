@@ -8,6 +8,7 @@ import ru.snake.spritepacker.writer.expression.AddExpression;
 import ru.snake.spritepacker.writer.expression.ConstantExpression;
 import ru.snake.spritepacker.writer.expression.DivExpression;
 import ru.snake.spritepacker.writer.expression.Expression;
+import ru.snake.spritepacker.writer.expression.ModExpression;
 import ru.snake.spritepacker.writer.expression.MulExpression;
 import ru.snake.spritepacker.writer.expression.SubExpression;
 import ru.snake.spritepacker.writer.expression.TextExpression;
@@ -118,6 +119,8 @@ public class Parser {
 			node = parseMulOperation(left);
 		} else if (operation.equals("/")) {
 			node = parseDivOperation(left);
+		} else if (operation.equals("%")) {
+			node = parseModOperation(left);
 		} else {
 			throw ParserException.create("parseOperatorNode", current);
 		}
@@ -153,6 +156,12 @@ public class Parser {
 			nextToken();
 
 			Expression right = parseDivOperation(value);
+
+			node = new AddExpression(left, right);
+		} else if (isOperition && current.value.equals("%")) {
+			nextToken();
+
+			Expression right = parseModOperation(value);
 
 			node = new AddExpression(left, right);
 		} else {
@@ -192,6 +201,12 @@ public class Parser {
 			Expression right = parseDivOperation(value);
 
 			node = new SubExpression(left, right);
+		} else if (isOperition && current.value.equals("%")) {
+			nextToken();
+
+			Expression right = parseModOperation(value);
+
+			node = new SubExpression(left, right);
 		} else {
 			node = new SubExpression(left, value);
 		}
@@ -229,6 +244,12 @@ public class Parser {
 			value = new MulExpression(left, value);
 
 			node = parseDivOperation(value);
+		} else if (isOperition && current.value.equals("%")) {
+			nextToken();
+
+			value = new ModExpression(left, value);
+
+			node = parseModOperation(value);
 		} else {
 			node = new MulExpression(left, value);
 		}
@@ -266,8 +287,57 @@ public class Parser {
 			value = new DivExpression(left, value);
 
 			node = parseDivOperation(value);
+		} else if (isOperition && current.value.equals("%")) {
+			nextToken();
+
+			value = new ModExpression(left, value);
+
+			node = parseModOperation(value);
 		} else {
 			node = new DivExpression(left, value);
+		}
+
+		return node;
+	}
+
+	private Expression parseModOperation(Expression left) {
+		Expression node;
+		Expression value = parseExpressionValue();
+
+		boolean isOperition = current.type == TokeType.OPERATION;
+
+		if (isOperition && current.value.equals("+")) {
+			nextToken();
+
+			value = new DivExpression(left, value);
+
+			node = parseAddOperation(value);
+		} else if (isOperition && current.value.equals("-")) {
+			nextToken();
+
+			value = new DivExpression(left, value);
+
+			node = parseSubOperation(value);
+		} else if (isOperition && current.value.equals("*")) {
+			nextToken();
+
+			value = new DivExpression(left, value);
+
+			node = parseMulOperation(value);
+		} else if (isOperition && current.value.equals("/")) {
+			nextToken();
+
+			value = new DivExpression(left, value);
+
+			node = parseDivOperation(value);
+		} else if (isOperition && current.value.equals("%")) {
+			nextToken();
+
+			value = new ModExpression(left, value);
+
+			node = parseModOperation(value);
+		} else {
+			node = new ModExpression(left, value);
 		}
 
 		return node;

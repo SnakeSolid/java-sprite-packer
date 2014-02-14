@@ -11,6 +11,7 @@ import ru.snake.spritepacker.writer.expression.AddExpression;
 import ru.snake.spritepacker.writer.expression.ConstantExpression;
 import ru.snake.spritepacker.writer.expression.DivExpression;
 import ru.snake.spritepacker.writer.expression.ExpressionVisitor;
+import ru.snake.spritepacker.writer.expression.ModExpression;
 import ru.snake.spritepacker.writer.expression.MulExpression;
 import ru.snake.spritepacker.writer.expression.SubExpression;
 import ru.snake.spritepacker.writer.expression.TextExpression;
@@ -62,6 +63,9 @@ public class VariableMap implements ExpressionVisitor {
 	}
 
 	public void visitDiv(DivExpression expression) {
+	}
+
+	public void visitMod(ModExpression expression) {
 	}
 
 	@Override
