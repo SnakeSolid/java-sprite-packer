@@ -48,14 +48,14 @@ public class AtlasTextWriter extends TextWriter implements CoreFactoryWalker {
 
 	@Override
 	public void start() {
-		startWrite(getOutputFile());
-
 		Dimension atlasSize = output.atlasSizes.get(atlasId);
 
 		setValue("atlas.id", atlasId);
 		setValue("atlas.name", atlasName);
 		setValue("atlas.width", atlasSize.width);
 		setValue("atlas.height", atlasSize.height);
+
+		startWrite(getOutputFile());
 
 		animationIndex = 0;
 	}
