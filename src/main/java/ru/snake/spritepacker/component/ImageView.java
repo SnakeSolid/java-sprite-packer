@@ -4,10 +4,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 
-import javax.swing.JPanel;
-
 @SuppressWarnings("serial")
-public class ImageView extends JPanel {
+public class ImageView extends CheckerPanel {
 
 	private static final int MAX_WIDTH = 1024;
 	private static final int MAX_HEIGHT = 768;
@@ -36,6 +34,8 @@ public class ImageView extends JPanel {
 
 	@Override
 	public void paint(Graphics g) {
+		super.paint(g);
+
 		int width = getWidth();
 		int height = getHeight();
 		int imagewidth = image.getWidth(null);
@@ -43,8 +43,6 @@ public class ImageView extends JPanel {
 
 		float xscale = (float) width / (float) imagewidth;
 		float yscale = (float) height / (float) imageheight;
-
-		g.fillRect(0, 0, width, height);
 
 		if (xscale > 1.0f && yscale > 1.0f) {
 			int imagex = (width - imagewidth) / 2;

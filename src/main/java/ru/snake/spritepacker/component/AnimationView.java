@@ -7,14 +7,12 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
-import javax.swing.JPanel;
-
 import ru.snake.spritepacker.core.Animation;
 import ru.snake.spritepacker.core.CoreFactory;
 import ru.snake.spritepacker.core.CoreSubscriber;
 
 @SuppressWarnings("serial")
-public class AnimationView extends JPanel implements MouseMotionListener,
+public class AnimationView extends CheckerPanel implements MouseMotionListener,
 		CoreSubscriber {
 
 	private static final int FRAMES_LINE_HEIGHT = 16;
@@ -64,16 +62,14 @@ public class AnimationView extends JPanel implements MouseMotionListener,
 
 	@Override
 	public void paint(Graphics g) {
-		int width = getWidth();
-		int height = getHeight();
-
-		g.setColor(Color.DARK_GRAY);
-		g.fillRect(0, 0, width, height);
+		super.paint(g);
 
 		if (animation == null) {
 			return;
 		}
 
+		int width = getWidth();
+		int height = getHeight();
 		int animwidth = animation.getWidth();
 		int animheight = animation.getHeight();
 		int imagex = width / 2;
@@ -105,7 +101,7 @@ public class AnimationView extends JPanel implements MouseMotionListener,
 			int x = i * width / totalframes;
 			int w = width / totalframes;
 
-			g.setColor(Color.WHITE);
+			g.setColor(Color.BLACK);
 			g.drawRect(x + w / 4, height - FRAMES_LINE_HEIGHT, w / 2,
 					FRAMES_LINE_HEIGHT - 1);
 

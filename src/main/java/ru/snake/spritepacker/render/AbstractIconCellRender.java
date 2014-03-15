@@ -4,6 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Paint;
+import java.awt.Rectangle;
+import java.awt.TexturePaint;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,21 +21,31 @@ import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 
+import ru.snake.spritepacker.Configuration;
 import ru.snake.spritepacker.core.Texture;
 
 @SuppressWarnings("serial")
 public abstract class AbstractIconCellRender extends JPanel implements
 		ListCellRenderer {
 
-	private static final int THUMBNAIL_SIZE = 48;
-	private static final int THUMBNAIL_GRID_SIZE = 4;
-
 	private final Map<Texture, Icon> cache;
+
+	private final int thumnailSize;
+	private final int gridSize;
+	private final Paint paint;
+	private final Color fill;
 
 	protected final JLabel icon;
 	protected final JLabel label;
 
 	public AbstractIconCellRender() {
+		cache = new HashMap<Texture, Icon>();
+
+		thumnailSize = getThumnailSize();
+		gridSize = getGridSize();
+		paint = createPaint();
+		fill = getDefaultColor();
+
 		BorderLayout layout = new BorderLayout(4, 4);
 		setLayout(layout);
 
@@ -40,8 +54,47 @@ public abstract class AbstractIconCellRender extends JPanel implements
 
 		add(icon, BorderLayout.LINE_START);
 		add(label, BorderLayout.CENTER);
+	}
 
-		cache = new HashMap<Texture, Icon>();
+	private int getGridSize() {
+		Configuration config = Configuration.getInstance();
+
+		return config.getListGridSize();
+	}
+
+	private int getThumnailSize() {
+		Configuration config = Configuration.getInstance();
+
+		return config.getListThumbSize();
+	}
+
+	private Color getDefaultColor() {
+		Configuration config = Configuration.getInstance();
+
+		return config.getListForeground();
+	}
+
+	private Paint createPaint() {
+		Configuration config = Configuration.getInstance();
+		Color foreground = config.getListForeground();
+		Color background = config.getListBackground();
+
+		Rectangle anchor = new Rectangle(2 * gridSize, 2 * gridSize);
+		BufferedImage txtr = new BufferedImage(2 * gridSize, 2 * gridSize,
+				BufferedImage.TYPE_INT_ARGB);
+
+		Graphics g = txtr.getGraphics();
+		g.setColor(foreground);
+		g.fillRect(0, 0, gridSize, gridSize);
+		g.fillRect(gridSize, gridSize, gridSize, gridSize);
+		g.setColor(background);
+		g.fillRect(gridSize, 0, gridSize, gridSize);
+		g.fillRect(0, gridSize, gridSize, gridSize);
+		g.dispose();
+
+		Paint paint = new TexturePaint(txtr, anchor);
+
+		return paint;
 	}
 
 	@Override
@@ -81,53 +134,53 @@ public abstract class AbstractIconCellRender extends JPanel implements
 
 	abstract protected void updateText(Object value);
 
-	protected Icon getTextureIcon(Texture texture) {
-		if (!cache.containsKey(texture)) {
-			BufferedImage image = new BufferedImage(THUMBNAIL_SIZE,
-					THUMBNAIL_SIZE, BufferedImage.TYPE_INT_ARGB);
-			Graphics g;
-
-			int imagewidth = texture.image.getWidth();
-			int imageheight = texture.image.getHeight();
-			float scalex = (float) (THUMBNAIL_SIZE - 5) / imagewidth;
-			float scaley = (float) (THUMBNAIL_SIZE - 5) / imageheight;
-
-			g = image.getGraphics();
-			g.setColor(Color.BLACK);
-			g.drawRect(0, 0, THUMBNAIL_SIZE - 1, THUMBNAIL_SIZE - 1);
-			g.setColor(Color.GRAY);
-			g.fillRect(1, 1, THUMBNAIL_SIZE - 2, THUMBNAIL_SIZE - 2);
-			g.setColor(Color.DARK_GRAY);
-
-			for (int j = 0, y = 1; y < THUMBNAIL_SIZE - 2; j++, y += THUMBNAIL_GRID_SIZE) {
-				for (int i = 0, x = 1; x < THUMBNAIL_SIZE - 2; i++, x += THUMBNAIL_GRID_SIZE) {
-					if (((i + j) & 1) == 0) {
-						g.fillRect(x, y, THUMBNAIL_GRID_SIZE,
-								THUMBNAIL_GRID_SIZE);
-					}
-				}
-			}
-
-			if (scalex < scaley) {
-				int height = Math.round(scalex * imageheight);
-
-				g.drawImage(texture.image, 2, (THUMBNAIL_SIZE - height) / 2,
-						THUMBNAIL_SIZE - 5, height, null);
-			} else {
-				int width = Math.round(scaley * imagewidth);
-
-				g.drawImage(texture.image, (THUMBNAIL_SIZE - width) / 2, 2,
-						width, THUMBNAIL_SIZE - 5, null);
-			}
-
-			g.dispose();
-
-			Icon icon = new ImageIcon(image);
-
-			cache.put(texture, icon);
+	protected final Icon getTextureIcon(Texture texture) {
+		if (cache.containsKey(texture)) {
+			return cache.get(texture);
 		}
 
-		return cache.get(texture);
+		BufferedImage image = new BufferedImage(thumnailSize, thumnailSize,
+				BufferedImage.TYPE_INT_ARGB);
+
+		int imagewidth = texture.image.getWidth();
+		int imageheight = texture.image.getHeight();
+		float scalex = (float) (thumnailSize - 5) / imagewidth;
+		float scaley = (float) (thumnailSize - 5) / imageheight;
+
+		Graphics g = image.getGraphics();
+		g.setColor(Color.BLACK);
+		g.drawRect(0, 0, thumnailSize - 1, thumnailSize - 1);
+
+		if (g instanceof Graphics2D) {
+			Graphics2D g2 = (Graphics2D) g;
+
+			g2.setPaint(paint);
+			g.fillRect(1, 1, thumnailSize - 2, thumnailSize - 2);
+			g2.setPaint(null);
+		} else {
+			g.setColor(fill);
+			g.fillRect(1, 1, thumnailSize - 2, thumnailSize - 2);
+		}
+
+		if (scalex < scaley) {
+			int height = Math.round(scalex * imageheight);
+
+			g.drawImage(texture.image, 2, (thumnailSize - height) / 2,
+					thumnailSize - 5, height, null);
+		} else {
+			int width = Math.round(scaley * imagewidth);
+
+			g.drawImage(texture.image, (thumnailSize - width) / 2, 2, width,
+					thumnailSize - 5, null);
+		}
+
+		g.dispose();
+
+		Icon icon = new ImageIcon(image);
+
+		cache.put(texture, icon);
+
+		return icon;
 	}
 
 }

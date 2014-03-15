@@ -26,6 +26,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.event.ListSelectionListener;
 
 import ru.snake.spritepacker.actions.AboutAction;
+import ru.snake.spritepacker.actions.ApplicationSettingsAction;
 import ru.snake.spritepacker.actions.ExitApplicationAction;
 import ru.snake.spritepacker.actions.MergeSimilarAction;
 import ru.snake.spritepacker.actions.RemoveTextureAction;
@@ -140,6 +141,7 @@ public class MainFrame extends JFrame {
 	private static final String SETTINGS_PROJECT = "settings-project"; //$NON-NLS-1$
 	private static final KeyStroke SETTINGS_PROJECT_KEY = KeyStroke
 			.getKeyStroke("control E"); //$NON-NLS-1$
+	private static final String SETTINGS_APPLICATION = "settings-application"; //$NON-NLS-1$
 	private static final String VIEW_ATLAS = "view-atlas"; //$NON-NLS-1$
 	private static final KeyStroke VIEW_ATLAS_KEY = KeyStroke
 			.getKeyStroke("control T"); //$NON-NLS-1$
@@ -203,6 +205,8 @@ public class MainFrame extends JFrame {
 		actionMap.put(VIEW_ATLAS, new ViewAtlasAction(this, factory));
 		actionMap.put(SETTINGS_PROJECT,
 				new ProjectSettingsAction(this, factory));
+		actionMap
+				.put(SETTINGS_APPLICATION, new ApplicationSettingsAction(this));
 		actionMap.put(IMPORT_ANIMATION,
 				new ImportAnimationAction(this, factory));
 		actionMap.put(IMPORT_TEXTURE, new ImportTextureAction(this, factory));
@@ -295,6 +299,7 @@ public class MainFrame extends JFrame {
 		project.addSeparator();
 		project.add(pexport);
 		project.add(pimport);
+		project.add(createMenuItem(SETTINGS_APPLICATION));
 		project.addSeparator();
 		project.add(createMenuItem(EXIT_APPLICATION));
 

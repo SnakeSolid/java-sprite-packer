@@ -1,15 +1,12 @@
 package ru.snake.spritepacker.component;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-
-import javax.swing.JPanel;
 
 import ru.snake.spritepacker.core.Sprite;
 
 @SuppressWarnings("serial")
-public class SpriteView extends JPanel {
+public class SpriteView extends CheckerPanel {
 
 	private final Sprite sprite;
 
@@ -27,12 +24,10 @@ public class SpriteView extends JPanel {
 
 	@Override
 	public void paint(Graphics g) {
+		super.paint(g);
+
 		int width = getWidth();
 		int height = getHeight();
-
-		g.setColor(Color.DARK_GRAY);
-		g.fillRect(0, 0, width, height);
-
 		int spriteWidth = sprite.getWidth();
 		int spriteHeight = sprite.getHeight();
 		int imagex = width / 2;
