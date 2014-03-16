@@ -47,6 +47,7 @@ import ru.snake.spritepacker.actions.load.ImportTextureAction;
 import ru.snake.spritepacker.actions.load.ImportTiledTextureAction;
 import ru.snake.spritepacker.actions.plugin.ExportPlugunAction;
 import ru.snake.spritepacker.actions.plugin.ImportPlugunAction;
+import ru.snake.spritepacker.actions.plugin.ServicePlugunAction;
 import ru.snake.spritepacker.actions.project.NewProjectAction;
 import ru.snake.spritepacker.actions.project.OpenProjectAction;
 import ru.snake.spritepacker.actions.project.ProjectSettingsAction;
@@ -72,6 +73,7 @@ import ru.snake.spritepacker.listener.TextureSelectionListener;
 import ru.snake.spritepacker.plugin.ExportPlugin;
 import ru.snake.spritepacker.plugin.ImportPlugin;
 import ru.snake.spritepacker.plugin.PluginLoader;
+import ru.snake.spritepacker.plugin.ServicePlugin;
 import ru.snake.spritepacker.render.SpriteCellRenderer;
 import ru.snake.spritepacker.render.TextureCellRenderer;
 
@@ -363,6 +365,18 @@ public class MainFrame extends JFrame {
 
 		texture.add(createMenuItem(MERGE_SIMILAR_TEXTURES));
 		texture.add(createMenuItem(REMOVE_TEXTURE));
+
+		if (pluginLoader.hasServicePlugins()) {
+			JMenu plugins = new JMenu(
+					Messages.getString("MainFrame.MENU_PLUGINS")); //$NON-NLS-1$)
+			int index = menuBar.getComponentCount() - 1;
+
+			for (ServicePlugin plugin : pluginLoader.getServicePlugins()) {
+				plugins.add(new ServicePlugunAction(this, factory, plugin));
+			}
+
+			menuBar.add(plugins, index);
+		}
 
 		help.add(createMenuItem(HELP_ABOUT));
 

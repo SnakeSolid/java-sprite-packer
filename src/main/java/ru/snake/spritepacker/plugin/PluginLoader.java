@@ -20,10 +20,12 @@ public class PluginLoader {
 
 	private final List<ExportPlugin> exportPlugins;
 	private final List<ImportPlugin> importPlugins;
+	private final List<ServicePlugin> servicePlugins;
 
 	public PluginLoader() {
 		exportPlugins = new LinkedList<ExportPlugin>();
 		importPlugins = new LinkedList<ImportPlugin>();
+		servicePlugins = new LinkedList<ServicePlugin>();
 	}
 
 	public Collection<String> loadPlugins() {
@@ -56,6 +58,14 @@ public class PluginLoader {
 
 			try {
 				loadExportJar(each);
+			} catch (MalformedURLException e) {
+				errors.add(e.getLocalizedMessage());
+			} catch (ServiceConfigurationError e) {
+				errors.add(e.getLocalizedMessage());
+			}
+
+			try {
+				loadServiceJar(each);
 			} catch (MalformedURLException e) {
 				errors.add(e.getLocalizedMessage());
 			} catch (ServiceConfigurationError e) {
@@ -96,6 +106,21 @@ public class PluginLoader {
 		}
 	}
 
+	private void loadServiceJar(File file) throws MalformedURLException {
+		URI uri = file.toURI();
+		URL url = uri.toURL();
+		URL[] urls = new URL[] { url };
+
+		URLClassLoader classLoader = new URLClassLoader(urls, getClass()
+				.getClassLoader());
+		ServiceLoader<ServicePlugin> serviceLoader = ServiceLoader.load(
+				ServicePlugin.class, classLoader);
+
+		for (ServicePlugin plugin : serviceLoader) {
+			servicePlugins.add(plugin);
+		}
+	}
+
 	public boolean hasImportPlugins() {
 		return !importPlugins.isEmpty();
 	}
@@ -104,12 +129,20 @@ public class PluginLoader {
 		return !exportPlugins.isEmpty();
 	}
 
+	public boolean hasServicePlugins() {
+		return !servicePlugins.isEmpty();
+	}
+
 	public List<ImportPlugin> getImportPlugins() {
 		return importPlugins;
 	}
 
 	public List<ExportPlugin> getExportPlugins() {
 		return exportPlugins;
+	}
+
+	public List<ServicePlugin> getServicePlugins() {
+		return servicePlugins;
 	}
 
 }
