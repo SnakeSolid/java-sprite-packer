@@ -1,6 +1,7 @@
 package ru.snake.spritepacker.util;
 
 import java.io.File;
+import java.util.Random;
 
 public class Util {
 
@@ -11,6 +12,8 @@ public class Util {
 
 	private static final String DEFAULT_NAME = "none"; //$NON-NLS-1$;
 	private static final String PROJECT_FILE_DOT_SUFFIX = ".spz"; //$NON-NLS-1$;
+
+	private static final String NAME_FORMAT = "animation-%d"; //$NON-NLS-1$
 
 	private static final int MIN_PREFIX_LENGTH = 3;
 
@@ -107,6 +110,24 @@ public class Util {
 		filename = filename.replaceAll("__+", "_"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		return filename;
+	}
+
+	public static String getNameFromFiles(File[] images) {
+		String name = Util.getCommonFilePrefix(images);
+
+		if (name != null) {
+			return name;
+		}
+
+		File parent = images[0].getParentFile();
+
+		if (parent != null) {
+			return parent.getName();
+		}
+
+		Random random = new Random();
+
+		return String.format(NAME_FORMAT, random.nextInt());
 	}
 
 }

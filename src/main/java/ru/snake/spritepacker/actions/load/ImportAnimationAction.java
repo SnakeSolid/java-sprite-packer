@@ -7,7 +7,6 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javax.swing.Action;
 
@@ -16,6 +15,7 @@ import ru.snake.spritepacker.actions.BasicAction;
 import ru.snake.spritepacker.core.CoreFactory;
 import ru.snake.spritepacker.core.Sprite;
 import ru.snake.spritepacker.core.Texture;
+import ru.snake.spritepacker.core.TextureLoader;
 import ru.snake.spritepacker.util.Dialogs;
 import ru.snake.spritepacker.util.Util;
 
@@ -23,7 +23,6 @@ import ru.snake.spritepacker.util.Util;
 public class ImportAnimationAction extends BasicAction implements Action {
 
 	private static final String ICON_NAME = "import"; //$NON-NLS-1$
-	private static final String NAME_FORMAT = "animation-%d"; //$NON-NLS-1$
 
 	private final Component parent;
 	private final CoreFactory factory;
@@ -57,8 +56,10 @@ public class ImportAnimationAction extends BasicAction implements Action {
 	private void importAsIs(File[] images) {
 		List<Sprite> spritelist = new ArrayList<Sprite>(images.length);
 
+		TextureLoader textureLoader = factory.getTextureLoader();
+
 		for (File each : images) {
-			Texture texture = factory.createTexture(each);
+			Texture texture = textureLoader.load(each);
 
 			if (texture == null) {
 				continue;
@@ -70,7 +71,7 @@ public class ImportAnimationAction extends BasicAction implements Action {
 			spritelist.add(sprite);
 		}
 
-		String name = getNameFromFiles(images);
+		String name = Util.getNameFromFiles(images);
 
 		factory.createAnimation(name, spritelist);
 	}
@@ -79,9 +80,11 @@ public class ImportAnimationAction extends BasicAction implements Action {
 		List<Sprite> spritelist = new ArrayList<Sprite>(images.length);
 		List<Point> offsetlist = new ArrayList<Point>(images.length);
 
+		TextureLoader textureLoader = factory.getTextureLoader();
+
 		for (File each : images) {
 			Point point = new Point();
-			Texture texture = factory.createTexture(each, point);
+			Texture texture = textureLoader.loadCroped(each, point);
 
 			if (texture == null) {
 				continue;
@@ -126,27 +129,9 @@ public class ImportAnimationAction extends BasicAction implements Action {
 			sprite.offsetY = destY - point.y;
 		}
 
-		String name = getNameFromFiles(images);
+		String name = Util.getNameFromFiles(images);
 
 		factory.createAnimation(name, spritelist);
-	}
-
-	private String getNameFromFiles(File[] images) {
-		String name = Util.getCommonFilePrefix(images);
-
-		if (name != null) {
-			return name;
-		}
-
-		File parent = images[0].getParentFile();
-
-		if (parent != null) {
-			return parent.getName();
-		}
-
-		Random random = new Random();
-
-		return String.format(NAME_FORMAT, random.nextInt());
 	}
 
 }

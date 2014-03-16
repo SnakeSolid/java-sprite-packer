@@ -41,6 +41,7 @@ import ru.snake.spritepacker.actions.animation.RemoveAnimationAction;
 import ru.snake.spritepacker.actions.animation.RenameAnimationAction;
 import ru.snake.spritepacker.actions.load.ImportAnimationAction;
 import ru.snake.spritepacker.actions.load.ImportTextureAction;
+import ru.snake.spritepacker.actions.load.ImportTiledTextureAction;
 import ru.snake.spritepacker.actions.project.NewProjectAction;
 import ru.snake.spritepacker.actions.project.OpenProjectAction;
 import ru.snake.spritepacker.actions.project.ProjectSettingsAction;
@@ -92,6 +93,7 @@ public class MainFrame extends JFrame {
 	private static final KeyStroke IMPORT_ANIMATION_KEY = KeyStroke
 			.getKeyStroke("control I"); //$NON-NLS-1$
 	private static final String IMPORT_TEXTURE = "import-texture"; //$NON-NLS-1$
+	private static final String IMPORT_TILED_TEXTURE = "import-tiled-texture"; //$NON-NLS-1$
 	private static final String MERGE_SIMILAR_TEXTURES = "merge-similar-textures"; //$NON-NLS-1$
 	private static final KeyStroke MERGE_SIMILAR_TEXTURES_KEY = KeyStroke
 			.getKeyStroke("control M"); //$NON-NLS-1$
@@ -210,6 +212,8 @@ public class MainFrame extends JFrame {
 		actionMap.put(IMPORT_ANIMATION,
 				new ImportAnimationAction(this, factory));
 		actionMap.put(IMPORT_TEXTURE, new ImportTextureAction(this, factory));
+		actionMap.put(IMPORT_TILED_TEXTURE, new ImportTiledTextureAction(this,
+				factory));
 		actionMap.put(EXPORT_ATLAS, new ExportAtlasAction(this, factory));
 		actionMap.put(EXPORT_PROJECT, new ExportProjectAction(this, factory));
 		actionMap.put(EXPORT_ANIMATION,
@@ -288,6 +292,7 @@ public class MainFrame extends JFrame {
 		pexport.add(createMenuItem(EXPORT_ANIMATION));
 		pimport.add(createMenuItem(IMPORT_ANIMATION));
 		pimport.add(createMenuItem(IMPORT_TEXTURE));
+		pimport.add(createMenuItem(IMPORT_TILED_TEXTURE));
 
 		project.add(createMenuItem(NEW_PROJECT));
 		project.add(createMenuItem(OPEN_PROJECT));

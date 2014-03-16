@@ -1,6 +1,5 @@
 package ru.snake.spritepacker.core;
 
-import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -69,10 +68,9 @@ public class CoreFactory {
 	private final CoreListModel<Texture> textures;
 	private final CoreListModel<Sprite> sprites;
 	private final CoreListModel<Animation> animations;
-
 	private final Map<String, String> projectPreferences;
-
 	private final List<CoreSubscriber> subscribers;
+	private final TextureLoader textureLoader;
 
 	private Texture activeTexture;
 	private Sprite activeSprite;
@@ -92,10 +90,9 @@ public class CoreFactory {
 		textures = new CoreListModel<Texture>();
 		sprites = new CoreListModel<Sprite>();
 		animations = new CoreListModel<Animation>();
-
 		projectPreferences = new HashMap<String, String>();
-
 		subscribers = new LinkedList<CoreSubscriber>();
+		textureLoader = new CoreTextureLoader(this);
 
 		resetData();
 	}
@@ -122,105 +119,14 @@ public class CoreFactory {
 		}
 	}
 
-	public Texture createTexture(BufferedImage image) {
-		Texture texture = new Texture(image);
+	public TextureLoader getTextureLoader() {
+		return textureLoader;
+	}
 
+	public void createTexture(Texture texture) {
 		textures.addItem(texture);
 
 		modified = true;
-
-		return texture;
-	}
-
-	public Texture createTexture(File imagefile) {
-		BufferedImage image;
-
-		try {
-			image = ImageIO.read(imagefile);
-		} catch (IOException e) {
-			return null;
-		}
-
-		return createTexture(image);
-	}
-
-	public Texture createTexture(File imagefile, Point point) {
-		BufferedImage image;
-		BufferedImage subimage;
-
-		try {
-			image = ImageIO.read(imagefile);
-		} catch (IOException e) {
-			return null;
-		}
-
-		int height = image.getHeight();
-		int width = image.getWidth();
-
-		int top = 0;
-		int left = 0;
-		int bottom = height;
-		int right = width;
-
-		int[] rgb = new int[width * height];
-
-		image.getRGB(0, 0, width, height, rgb, 0, width);
-
-		toploop: while (top < bottom) {
-			for (int i = 0; i < width; i++) {
-				if ((rgb[i + width * top] & 0xff000000) != 0) {
-					break toploop;
-				}
-			}
-
-			top++;
-		}
-
-		bottomloop: while (top < bottom) {
-			for (int i = 0; i < width; i++) {
-				if ((rgb[i + width * (bottom - 1)] & 0xff000000) != 0) {
-					break bottomloop;
-				}
-			}
-
-			bottom--;
-		}
-
-		if (top == bottom) {
-			return null;
-		}
-
-		leftloop: while (left < right) {
-			for (int i = top; i < bottom; i++) {
-				if ((rgb[left + width * i] & 0xff000000) != 0) {
-					break leftloop;
-				}
-			}
-
-			left++;
-		}
-
-		rightloop: while (left < right) {
-			for (int i = top; i < bottom; i++) {
-				if ((rgb[right - 1 + width * i] & 0xff000000) != 0) {
-					break rightloop;
-				}
-			}
-
-			right--;
-		}
-
-		if (left == right) {
-			return null;
-		}
-
-		subimage = image.getSubimage(left, top, right - left, bottom - top);
-
-		if (point != null) {
-			point.setLocation(left, top);
-		}
-
-		return createTexture(subimage);
 	}
 
 	public Animation createAnimation(String name, List<Sprite> spritelist) {

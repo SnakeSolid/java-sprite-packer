@@ -10,6 +10,7 @@ import javax.swing.Action;
 import ru.snake.spritepacker.Messages;
 import ru.snake.spritepacker.actions.BasicAction;
 import ru.snake.spritepacker.core.CoreFactory;
+import ru.snake.spritepacker.core.TextureLoader;
 import ru.snake.spritepacker.util.Dialogs;
 
 @SuppressWarnings("serial")
@@ -34,11 +35,13 @@ public class ImportTextureAction extends BasicAction implements Action {
 			return;
 		}
 
+		TextureLoader textureLoader = factory.getTextureLoader();
+
 		if (Dialogs.confirm(parent,
 				Messages.getString("ImportTextureAction.MESSAGE"))) { //$NON-NLS-1$
-			factory.createTexture(file, null);
+			textureLoader.loadCroped(file);
 		} else {
-			factory.createTexture(file);
+			textureLoader.load(file);
 		}
 	}
 

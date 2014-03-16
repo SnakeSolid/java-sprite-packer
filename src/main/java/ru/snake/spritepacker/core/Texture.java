@@ -1,7 +1,6 @@
 package ru.snake.spritepacker.core;
 
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
 import java.awt.image.Raster;
 import java.util.Arrays;
 
@@ -13,18 +12,18 @@ public class Texture {
 	public Texture(BufferedImage image) {
 		this.image = image;
 
-		byte[] rgb = getRasterData(image);
+		int[] rgb = getRasterData(image);
 
 		imagehash = Arrays.hashCode(rgb);
 		rgb = null;
 	}
 
-	private byte[] getRasterData(BufferedImage image) {
+	private int[] getRasterData(BufferedImage image) {
 		Raster raster = image.getRaster();
-		DataBufferByte buffer = (DataBufferByte) raster.getDataBuffer();
-		byte[] rgb = buffer.getData();
+		int width = image.getWidth();
+		int height = image.getHeight();
 
-		return rgb;
+		return raster.getPixels(0, 0, width, height, (int[]) null);
 	}
 
 	@Override
@@ -60,8 +59,8 @@ public class Texture {
 			return false;
 		}
 
-		byte[] thisrgb = getRasterData(image);
-		byte[] otherrgb = getRasterData(other.image);
+		int[] thisrgb = getRasterData(image);
+		int[] otherrgb = getRasterData(other.image);
 
 		return Arrays.equals(thisrgb, otherrgb);
 	}
