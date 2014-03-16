@@ -6,6 +6,8 @@ import java.awt.GridLayout;
 import java.awt.LayoutManager;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseListener;
+import java.util.Collection;
+import java.util.Iterator;
 
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
@@ -16,6 +18,7 @@ import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -42,6 +45,8 @@ import ru.snake.spritepacker.actions.animation.RenameAnimationAction;
 import ru.snake.spritepacker.actions.load.ImportAnimationAction;
 import ru.snake.spritepacker.actions.load.ImportTextureAction;
 import ru.snake.spritepacker.actions.load.ImportTiledTextureAction;
+import ru.snake.spritepacker.actions.plugin.ExportPlugunAction;
+import ru.snake.spritepacker.actions.plugin.ImportPlugunAction;
 import ru.snake.spritepacker.actions.project.NewProjectAction;
 import ru.snake.spritepacker.actions.project.OpenProjectAction;
 import ru.snake.spritepacker.actions.project.ProjectSettingsAction;
@@ -64,6 +69,9 @@ import ru.snake.spritepacker.listener.AnimationSelectionListener;
 import ru.snake.spritepacker.listener.SpriteMouseListener;
 import ru.snake.spritepacker.listener.SpriteSelectionListener;
 import ru.snake.spritepacker.listener.TextureSelectionListener;
+import ru.snake.spritepacker.plugin.ExportPlugin;
+import ru.snake.spritepacker.plugin.ImportPlugin;
+import ru.snake.spritepacker.plugin.PluginLoader;
 import ru.snake.spritepacker.render.SpriteCellRenderer;
 import ru.snake.spritepacker.render.TextureCellRenderer;
 
@@ -287,12 +295,36 @@ public class MainFrame extends JFrame {
 		pimport.setMnemonic(KeyEvent.VK_I);
 		pexport.setMnemonic(KeyEvent.VK_E);
 
+		PluginLoader pluginLoader = new PluginLoader();
+		Collection<String> errors = pluginLoader.loadPlugins();
+
+		if (!errors.isEmpty()) {
+			showPluginErrors(errors);
+		}
+
 		pexport.add(createMenuItem(EXPORT_ATLAS));
 		pexport.add(createMenuItem(EXPORT_PROJECT));
 		pexport.add(createMenuItem(EXPORT_ANIMATION));
+
+		if (pluginLoader.hasExportPlugins()) {
+			pexport.addSeparator();
+
+			for (ExportPlugin plugin : pluginLoader.getExportPlugins()) {
+				pexport.add(new ExportPlugunAction(this, factory, plugin));
+			}
+		}
+
 		pimport.add(createMenuItem(IMPORT_ANIMATION));
 		pimport.add(createMenuItem(IMPORT_TEXTURE));
 		pimport.add(createMenuItem(IMPORT_TILED_TEXTURE));
+
+		if (pluginLoader.hasImportPlugins()) {
+			pimport.addSeparator();
+
+			for (ImportPlugin plugin : pluginLoader.getImportPlugins()) {
+				pimport.add(new ImportPlugunAction(this, factory, plugin));
+			}
+		}
 
 		project.add(createMenuItem(NEW_PROJECT));
 		project.add(createMenuItem(OPEN_PROJECT));
@@ -338,6 +370,25 @@ public class MainFrame extends JFrame {
 		menuBar.setActionMap(actionMap);
 
 		setJMenuBar(menuBar);
+	}
+
+	private void showPluginErrors(Collection<String> errors) {
+		StringBuilder builder = new StringBuilder();
+		Iterator<String> it = errors.iterator();
+
+		builder.append("<HTML><UL><LI>");
+		builder.append(it.next());
+
+		while (it.hasNext()) {
+			builder.append("</LI><LI>");
+			builder.append(it.next());
+		}
+
+		builder.append("</LI></UL>");
+
+		JOptionPane.showMessageDialog(this, builder,
+				Messages.getString("MainFrame.TITLE"), //$NON-NLS-1$
+				JOptionPane.WARNING_MESSAGE);
 	}
 
 	private JMenuItem createMenuItem(String key) {
