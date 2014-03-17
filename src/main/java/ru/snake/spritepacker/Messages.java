@@ -1,21 +1,18 @@
 package ru.snake.spritepacker;
 
-import java.util.Locale;
+import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class Messages {
 
-	private static final String BUNDLE_NAME = "ui/messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "ru.snake.spritepacker.i18n.Messages";
+	private static final String NO_KEY_FOUND_FORMAT = "!{0}!";
 
 	private static final ResourceBundle RESOURCE_BUNDLE;
 
 	static {
-		Locale locale = Locale.getDefault();
-		ResourceBundle.Control control = new Utf8BundleControl();
-
-		RESOURCE_BUNDLE = ResourceBundle
-				.getBundle(BUNDLE_NAME, locale, control);
+		RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 	}
 
 	private Messages() {
@@ -25,7 +22,10 @@ public class Messages {
 		try {
 			return RESOURCE_BUNDLE.getString(key);
 		} catch (MissingResourceException e) {
-			return '!' + key + '!';
+			MessageFormat format = new MessageFormat(NO_KEY_FOUND_FORMAT);
+			Object[] params = { key };
+
+			return format.format(params);
 		}
 	}
 
