@@ -37,25 +37,25 @@ public class ExportAtlasAction extends BasicAction implements Action {
 
 	private static final String ICON_NAME = "atlas"; //$NON-NLS-1$
 
-	private static final String ATLAS_FORMAT = "atlas-format"; //$NON-NLS-1$
-	private static final String ATLAS_POSTFIX = "atlas-postfix"; //$NON-NLS-1$
-	private static final String ATLAS_PREFIX = "atlas-prefix"; //$NON-NLS-1$
-	private static final String DESCRIPTION_POSTFIX = "description-postfix"; //$NON-NLS-1$
-	private static final String DESCRIPTION_PREFIX = "description-prefix"; //$NON-NLS-1$
-	private static final String DESCRIPTION_HEADER = "description-header";
-	private static final String DESCRIPTION_FORMAT = "description-format"; //$NON-NLS-1$
-	private static final String DESCRIPTION_FOOTER = "description-footer";
-	private static final String DESCRIPTION_JOIN = "description-join"; //$NON-NLS-1$
+	private static final String ATLAS_FORMAT = "export-atlas-image-format"; //$NON-NLS-1$
+	private static final String ATLAS_POSTFIX = "export-atlas-image-postfix"; //$NON-NLS-1$
+	private static final String ATLAS_PREFIX = "export-atlas-image-prefix"; //$NON-NLS-1$
+	private static final String DESCRIPTION_POSTFIX = "export-atlas-text-postfix"; //$NON-NLS-1$
+	private static final String DESCRIPTION_PREFIX = "export-atlas-text-prefix"; //$NON-NLS-1$
+	private static final String DESCRIPTION_HEADER = "export-atlas-text-header"; //$NON-NLS-1$
+	private static final String DESCRIPTION_FORMAT = "export-atlas-text-format"; //$NON-NLS-1$
+	private static final String DESCRIPTION_FOOTER = "export-atlas-text-footer"; //$NON-NLS-1$
+	private static final String DESCRIPTION_JOIN = "export-atlas-text-join"; //$NON-NLS-1$
 
 	private static final String DEFAULT_ATLAS_PREFIX = ""; //$NON-NLS-1$
 	private static final String DEFAULT_ATLAS_EXTENSION = ".png"; //$NON-NLS-1$
 	private static final String DEFAULT_ATLAS_FORMAT = "png"; //$NON-NLS-1$
 	private static final String DEFAULT_DESCRIPTION_PREFIX = "description"; //$NON-NLS-1$
 	private static final String DEFAULT_DESCRIPTION_POSTFIX = ".txt"; //$NON-NLS-1$
-	private static final String DEFAULT_DESCRIPTION_HEADER = "";
+	private static final String DEFAULT_DESCRIPTION_HEADER = ""; //$NON-NLS-1$
 	private static final String DEFAULT_DESCRIPTION_FORMAT = "atlas - {atlas.id};{atlas.name};{atlas.width};{atlas.height};\nanimation - {animation.id};{animation.name};\nsprite - {sprite.id};{sprite.name};{sprite.offsetx};{sprite.offsety};\ntexture - {texture.top};{texture.left};{texture.width};{texture.height}\n"; //$NON-NLS-1$
-	private static final String DEFAULT_DESCRIPTION_FOOTER = "";
-	private static final boolean DEFAULT_JOIN_VALUE = false;
+	private static final String DEFAULT_DESCRIPTION_FOOTER = ""; //$NON-NLS-1$
+	private static final String DEFAULT_JOIN_VALUE = "false"; //$NON-NLS-1$
 
 	private final CoreFactory factory;
 	private final Component parent;
@@ -91,7 +91,7 @@ public class ExportAtlasAction extends BasicAction implements Action {
 				DEFAULT_DESCRIPTION_FOOTER);
 
 		boolean descriptionJoin = Boolean.parseBoolean(factory.getPreference(
-				DESCRIPTION_JOIN, String.valueOf(DEFAULT_JOIN_VALUE)));
+				DESCRIPTION_JOIN, DEFAULT_JOIN_VALUE));
 
 		// ===================================================
 
