@@ -24,6 +24,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
+import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.ListSelectionListener;
@@ -163,13 +164,12 @@ public class MainFrame extends JFrame {
 
 	private ActionMap actionMap;
 	private JToolBar animationBar;
-	private JList animationsList;
+	private JList<ListModel> animationsList;
 	private CoreFactory factory;
 	private InputMap inputMap;
 	private JToolBar spriteBar;
-	private JList spritesList;
-
-	private JList texturesList;
+	private JList<ListModel> spritesList;
+	private JList<ListModel> texturesList;
 
 	public MainFrame() {
 		super(Messages.getString("MainFrame.TITLE")); //$NON-NLS-1$
@@ -465,13 +465,13 @@ public class MainFrame extends JFrame {
 		tabbedPane.setTabPlacement(JTabbedPane.BOTTOM);
 		tabbedPane.setTabLayoutPolicy(JTabbedPane.WRAP_TAB_LAYOUT);
 
-		animationsList = new JList();
+		animationsList = new JList<ListModel>();
 		animationsList.setModel(factory.getAnimationsModel());
 		JScrollPane animationScroll = new JScrollPane(animationsList);
 		animationScroll
 				.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-		spritesList = new JList();
+		spritesList = new JList<ListModel>();
 		spritesList.setModel(factory.getSpritesModel());
 		spritesList.setCellRenderer(new SpriteCellRenderer());
 
@@ -515,7 +515,7 @@ public class MainFrame extends JFrame {
 
 		// ================================================
 
-		texturesList = new JList();
+		texturesList = new JList<ListModel>();
 		texturesList.setModel(factory.getTexturesModel());
 		texturesList.setCellRenderer(new TextureCellRenderer());
 		texturesList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
